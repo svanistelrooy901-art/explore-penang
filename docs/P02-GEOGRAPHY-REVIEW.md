@@ -1,31 +1,63 @@
-# P02.2 — Geographic accuracy approval draft (PRIVATE REVIEW BRANCH)
+# P02.2 — Geographic accuracy review
 
-**Status:** research and geographic source preparation in progress. **Not approved for publishing.** Do not merge this branch into main or alter GitHub Pages configuration until owner explicitly approves the map.
+**Status, 15 October 2026:** implemented draft; owner geography approval pending. Branch: `review/p02-geography`. The repository and branch are public; this work has not been deployed to GitHub Pages. Do not merge or change Pages settings before Mamu approves the geographic draft.
 
-## Locked requirements
-- Use OpenStreetMap (OSM) coastline, bridge, ferry and destination geometries as primary data source, preserving OSM attribution and applicable ODbL requirements.
-- Cross-check place names, major crossings and tourism points against Malaysian official sources (e.g. MyGeoportal and Penang Global Tourism). Record each verification separately; do not claim it is done without evidence.
-- Draw **both** road bridges: (1) Penang Bridge linking Gelugor to Perai; (2) Sultan Abdul Halim Mu'adzam Shah Bridge linking Batu Maung to Batu Kawan/Bandar Cassia.
-- Represent George Town–Butterworth ferry separately from road bridges.
-- Position Penang Island west of Seberang Perai; north-up geographic reference view first. Stylized 3D isometric render is a separate artistic layer.
-- Retain mobile-first pan/zoom, destination discovery, attraction cards, official/ticket outbound links, quests and shareability.
-- Never replace the live map before owner reviews and approves geographic draft.
+## Concrete review material
 
-## Source and compliance register
-| Data / cross-check | Source | Status |
+- [Interactive self-contained review](../review.html): open locally; compare **North-up reference** and **Illustrated depth**. Use **George Town close-up** for four nearby points.
+- [North-up reference map](geography-reference.svg).
+- [Illustrated depth map](geography-illustrated.svg).
+- [Geometry snapshot](../data/geography.geojson), [destination coordinates](../data/places.json), and [source receipts](../data/source-receipts.json).
+
+The live `index.html` is byte-for-byte unchanged from production commit `5729c337704457b1b15045f024a6d313db290b2f`. No merge, deployment, DNS or GitHub Pages setting change is part of this work.
+
+## Geographic source register
+
+The six geometry features are extracted from OSM. Exact longitude/latitude vertices are retained. Each feature records its OSM ID, URL, object version and timestamp; raw-response SHA-256 receipts record retrieval. The north-up view uses local equirectangular projection (standard parallel 5.36° N), cropped to `[100.16, 5.20, 100.52, 5.51]` (west, south, east, north).
+
+| Feature | OSM reference | Method and limitation |
 | --- | --- | --- |
-| Coastlines, waterways, road/bridge geometries, attraction nodes | https://www.openstreetmap.org/ | Data extraction pending |
-| Attribution / ODbL | https://www.openstreetmap.org/copyright | Requirements reviewed; implementation pending |
-| Malaysian geographical reference | https://www.mygeoportal.gov.my/ | Cross-check pending |
-| Penang tourism reference | https://mypenang.gov.my/ | Cross-check pending |
+| Penang Island | Relation [12272811](https://www.openstreetmap.org/relation/12272811), v54 | Join exact coastline member nodes; fail on ring gaps. |
+| State land / Seberang Perai | Relation [4445131](https://www.openstreetmap.org/relation/4445131), v127 | Exact outer rings; eastern edge includes an administrative boundary, not coastline. |
+| Penang Bridge | Way [601267471](https://www.openstreetmap.org/way/601267471), v9 | Mapped bridge footprint; not all approach roads/interchanges. |
+| Sultan Abdul Halim Mu’adzam Shah Bridge | Way [725050946](https://www.openstreetmap.org/way/725050946), v13 | Mapped marine footprint; not the full 24 km expressway. |
+| Ferry to island | Way [665889565](https://www.openstreetmap.org/way/665889565), v16 | Extracted ferry route; no live position or sailing guarantee. |
+| Ferry to mainland | Way [1212505372](https://www.openstreetmap.org/way/1212505372), v5 | Extracted separately from road bridges; unrelated routes excluded. |
 
-## Review gates
-1. Obtain actual OSM coastline/bridge geometries and record extraction date, bounding box, license, and reproducible source.
-2. Cross-check both bridge alignments, ferry connection, and named attractions.
-3. Generate geographic reference map with north arrow and attribution; annotate any uncertain feature.
-4. Build an independent illustrated 2.5D/3D mockup grounded in the verified geometry.
-5. Test small-screen legibility and map controls; collect screenshots.
-6. Present reference-versus-illustrated comparison for owner approval **before merge or publication**.
+Data is © OpenStreetMap contributors, licensed under [ODbL 1.0](https://opendatacommons.org/licenses/odbl/1-0/). Attribution appears on the interactive map, standalone SVGs and embedded data downloads. Official sources were cross-checks only; no third-party map artwork was copied.
 
-## Current risk
-Earlier P02 artwork is schematic and does **not** constitute geographic verification. No extracted OSM dataset or geographic draft is committed as of creation of this file.
+## Malaysian official cross-checks
+
+Checked on **15 October 2026**. Scope is names, connections and general locality; official sources do not certify OSM vertices.
+
+| Check | Evidence | Result and limit |
+| --- | --- | --- |
+| Two bridges, ferry, northern coast and mainland towns | [Penang Global Tourism — Penang Map](https://www.mypenang.gov.my/abt_png.php?id=em1DVjlJRHFtbFpqWGVwZldaMjVUUT09) | Names and broad relationships agree. |
+| First bridge island ↔ Perai | [PLUS](https://www.plus.com.my/our-expressways/) | Operator confirms island–Perai link. [Penang Bridge office FAQ](https://penangbridge.com.my/faqs/) identifies Gelugor; its stale “only road connection” claim is rejected. |
+| Second bridge Batu Maung ↔ Batu Kawan | [JKSB](https://www.jambatankedua.com.my/corporate-overview/) | Landing localities confirmed; total expressway and marine bridge are distinct. |
+| Ferry terminal names | [Penang Port Commission](https://penangport.gov.my/en/services/service/ferry-services) | Raja Tun Uda (George Town) ↔ Sultan Abdul Halim (Butterworth). No schedules copied because official pages show conflicting times. |
+| Fort Cornwallis | [PGT listing](https://www.mypenang.gov.my/view_directory.php?id=Q3Z3ZG1Sa2o1dGJDc3VtTWo2dlNpdz09) | Name and waterfront locality checked. |
+| Khoo Kongsi | [Official site](https://www.khookongsi.com.my/) | Identity and visitor link checked. |
+| Clan Jetties | [PGT listing](https://www.mypenang.gov.my/view_directory.php?id=ZW5mTlJKcWR2RXZ5eDkyS29yOVRWdz09) | Chew Jetty is the representative OSM point, not all jetties. |
+| Penang Hill | [Penang Hill Corporation](https://www.penanghill.gov.my/index.php/en/) | Hill identity and visitor link checked; peak pin is not the lower railway entrance. |
+| Kek Lok Si | [Official temple site](https://kekloksitemple.com/) | Air Itam locality and visitor link checked. |
+| Food-trail anchor | [PGT Chowrasta Market](https://mypenang.gov.my/view_directory.php?id=amRoa3REM0h5TFMzY2RhVzgwTjIyQT09) | One real market stop; no invented trail geometry. |
+
+MyGeoportal was an example in the earlier plan. It is not claimed as a completed cross-check or geometry provider. The official tourism bureau, operators and port commission provide the evidence above.
+
+## Presentation and interaction
+
+Both views use the same data. The depth study adds an affine presentation transform, raised land edges, decorative vegetation and symbols. It is **not measured terrain or the final detailed art direction**. The north arrow reflects the view transform. Building and locality centres are distinguished from entrances. Close George Town destinations group in overview and remain individually selectable on zoom or in the journal. Discovery uses a separate review-only local-storage key.
+
+## Validation
+
+- **9 core/geographic tests passed:** orientation, bridge IDs/extents/order, ferry extents, source versions, closed geometry, real POI coordinates, safe URLs, immutable rendering, zoom math, corrupt storage/hash recovery and output size/attribution.
+- **5 Chromium browser scenarios passed:** desktop and 390×844 mobile; filters, drag, pinch/button zoom, reduced motion, keyboard selection, quest/progress persistence, malformed hash, blocked storage, no third-party requests and standalone-file data download.
+- Desktop and mobile screenshots inspected locally. Real-device iOS/Android and screen-reader testing remain outstanding.
+- Deterministic build and `git diff --check` pass. CI runs checks only and has no deployment step. Remote CI must be read from the PR; local passes are not GitHub runs.
+
+## Owner review and next development
+
+Mamu reviews the island outline, west/east relationship, both bridge landings, ferry alignment and representative pins. Record corrections or explicit geographic approval before merge/publication. Geography approval does not imply final art approval.
+
+After approval: richer landmark/landscape art against fixed geometry, better overview/mobile labels, venue entrance/accessibility verification, real-device QA and a separate publication review. No ticket sales, affiliate tracking, ads or backend is active.

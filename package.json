@@ -1,0 +1,13 @@
+{
+  "name": "explore-penang-geography-review",
+  "version": "0.2.2",
+  "private": true,
+  "scripts": {
+    "build:review": "node scripts/build_review.cjs",
+    "test": "node --test tests/core.test.cjs",
+    "test:browser": "node --test tests/browser.test.cjs"
+  },
+  "devDependencies": {
+    "playwright": "1.61.1"
+  }
+}

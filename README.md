@@ -1,4 +1,31 @@
-# Explore Penang — P01 interactive prototype
+# Explore Penang
+
+## P02.2 geography review — 15 October 2026
+
+The geographic draft is implemented on `review/p02-geography`. Open **[review.html](review.html)** directly in a browser; it works offline and includes its source data. This branch is awaiting geographic approval before merge or publication.
+
+- North-up map assembled from real OSM coastline and state-boundary member ways.
+- Both road bridges and separate George Town–Butterworth ferry routes.
+- An illustrated depth study using the identical geometry.
+- Eight source-linked representative points, official visitor links, filters, a George Town close-up, discovery progress and Heritage Hunter quest.
+- Pointer drag, wheel/button zoom, touch pinch, keyboard selection, deep links and safe recovery from unavailable/corrupt storage.
+- No runtime mapping API, third-party script, analytics or tile request.
+
+The live `index.html` remains the earlier schematic prototype. This review is a geographic foundation and early depth study; the detailed illustrated-world treatment in the approved art reference is still future work. Evidence and publication gate: [P02-GEOGRAPHY-REVIEW.md](docs/P02-GEOGRAPHY-REVIEW.md).
+
+### Develop and verify
+
+```sh
+npm ci --ignore-scripts
+npm run build:review
+npm test
+npx playwright install chromium
+npm run test:browser
+```
+
+The build is deterministic from committed data. `review.html` and both `docs/geography-*.svg` files are generated. Edit `review/`, then rebuild. To deliberately refresh data, run `python3 scripts/fetch_sources.py` then `python3 scripts/build_geography.py`; read [data notes](data/README.md) first. Changed geography requires a new review.
+
+## Existing live P01 / early P02 prototype
 
 Open `index.html` in a modern browser. No dependencies, API keys or build process required.
 
