@@ -2,6 +2,7 @@
   'use strict';
   const C = typeof module !== 'undefined' && module.exports ? require('./map-core.js') : root.PenangMap;
   const A = typeof module !== 'undefined' && module.exports ? require('./map-art.js') : root.PenangArt;
+  const D = typeof module !== 'undefined' && module.exports ? require('./diorama.js') : root.PenangDiorama;
   const fmt = n => Number(n.toFixed(2));
   const ICONS = { Heritage: '✦', Nature: '♧', Culture: '◇', Food: '♨', Local: '⌂' };
   function geometryPath(geometry, mode) {
@@ -10,6 +11,7 @@
     return lines.map(line => line.map((p, i) => (i ? 'L' : 'M') + C.viewPoint(p, mode).map(fmt).join(' ')).join('') + (closed ? 'Z' : '')).join('');
   }
   function renderWorld(data, mode = 'reference') {
+    if(mode==='illustrated')return D.render(data,geometryPath);
     const features = Object.fromEntries(data.geography.features.map(f => [f.id, f]));
     const land = geometryPath(features['penang-land'].geometry, mode);
     const relief = mode === 'illustrated';

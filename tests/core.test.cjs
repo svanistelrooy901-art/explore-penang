@@ -3,6 +3,7 @@ const assert=require('node:assert/strict');
 const fs=require('node:fs');
 const C=require('../review/map-core.js');
 const R=require('../review/map-renderer.js');
+const D=require('../review/diorama.js');
 const geography=JSON.parse(fs.readFileSync('data/geography.geojson','utf8'));
 const places=JSON.parse(fs.readFileSync('data/places.json','utf8'));
 const data={geography,places};
@@ -80,7 +81,7 @@ test('review output is self-contained, attributed and explicitly withheld from p
   assert(!/\b(?:src|href)="https?:\/\/[^\"]+\.(?:js|css)/.test(html));
   assert(html.includes('© OpenStreetMap contributors'));assert(html.includes('noindex,nofollow'));
   assert(html.includes('Geography approved'));assert(html.includes('Not published'));assert(!html.includes('/*__'));
-  assert(html.length<1000000,'keep the self-contained review under 1 MB');
+  assert(Buffer.byteLength(html)<2000000,'keep the offline diorama, including its embedded atlas, under 2 MB');
 });
 test('illustration work preserves the exact geographic files approved by the owner',()=>{
   const crypto=require('node:crypto');
@@ -89,4 +90,23 @@ test('illustration work preserves the exact geographic files approved by the own
   for(const [file,digest] of Object.entries(approval.files)){
     assert.equal(crypto.createHash('sha256').update(fs.readFileSync(file)).digest('hex'),digest,`${file}: approved geometry changed`);
   }
+});
+test('switching presentation keeps the same geographic point beneath the view centre',()=>{
+  const initial={scale:7,x:-2600,y:-1200};
+  const world=[(550-initial.x)/initial.scale,(440-initial.y)/initial.scale];
+  const before=C.unviewPoint(world,'illustrated');
+  const converted=C.reframe(initial,'illustrated','reference');
+  const after=C.unviewPoint([(550-converted.x)/converted.scale,(440-converted.y)/converted.scale],'reference');
+  assert(Math.abs(before[0]-after[0])<1e-10&&Math.abs(before[1]-after[1])<1e-10);
+  const back=C.reframe(converted,'reference','illustrated');
+  assert(Math.abs(back.x-initial.x)<1e-8&&Math.abs(back.y-initial.y)<1e-8);
+});
+test('bridge art spines stay within the approved footprints and presets fit both bridges',()=>{
+  const points=[];
+  for(const id of ['bridge-1','bridge-2']){
+    const g=features[id].geometry;
+    for(const p of D.bridgeSpine(g)){assert(C.pointInGeometry(p,g),'bridge detail must remain in its source polygon');points.push(p);}
+  }
+  const camera=C.fitPoints(points,'illustrated',120);
+  for(const p of points){const [x,y]=C.viewPoint(p,'illustrated');assert(x*camera.scale+camera.x>=119&&x*camera.scale+camera.x<=981);assert(y*camera.scale+camera.y>=119&&y*camera.scale+camera.y<=761);}
 });

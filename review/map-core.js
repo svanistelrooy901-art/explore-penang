@@ -11,6 +11,22 @@
     const [x, y] = project(coordinate);
     return mode === 'illustrated' ? [x + .16 * (y - 440), 100 + .76 * y] : [x, y];
   }
+  function unviewPoint([x,y],mode='reference'){
+    if(mode==='illustrated'){y=(y-100)/.76;x-=.16*(y-440);}
+    return [BOUNDS[0]+(x-70)/(COS*UNIT),BOUNDS[3]-(y-70)/UNIT];
+  }
+  function reframe(camera,from,to){
+    const center=[(550-camera.x)/camera.scale,(440-camera.y)/camera.scale];
+    const projected=viewPoint(unviewPoint(center,from),to);
+    return {scale:camera.scale,x:550-projected[0]*camera.scale,y:440-projected[1]*camera.scale};
+  }
+  function fitPoints(points,mode,padding=120){
+    const p=points.map(point=>viewPoint(point,mode));
+    const xs=p.map(p=>p[0]),ys=p.map(p=>p[1]);
+    const x0=Math.min(...xs),x1=Math.max(...xs),y0=Math.min(...ys),y1=Math.max(...ys);
+    const scale=clamp(Math.min((1100-padding*2)/Math.max(1,x1-x0),(880-padding*2)/Math.max(1,y1-y0)),.85,14);
+    return {scale,x:550-(x0+x1)/2*scale,y:440-(y0+y1)/2*scale};
+  }
   function pointInRing([x, y], ring) {
     let inside = false;
     for (let i = 0, j = ring.length - 1; i < ring.length; j = i++) {
@@ -40,7 +56,7 @@
     catch { return null; }
   }
   function escape(value) { return String(value).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
-  const api = { BOUNDS, WIDTH, HEIGHT, UNIT, project, viewPoint, pointInGeometry, clamp, zoomAt, readProgress, readHash, escape };
+  const api = { BOUNDS, WIDTH, HEIGHT, UNIT, project, viewPoint, unviewPoint, reframe, fitPoints, pointInGeometry, clamp, zoomAt, readProgress, readHash, escape };
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
   else root.PenangMap = api;
 })(globalThis);

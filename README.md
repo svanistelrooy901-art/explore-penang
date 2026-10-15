@@ -11,7 +11,9 @@ Mamu approved the geographic draft on **16 October 2026**, against commit `18aa6
 - Pointer drag, wheel/button zoom, touch pinch, keyboard selection, deep links and safe recovery from unavailable/corrupt storage.
 - No runtime mapping API, third-party script, analytics or tile request.
 
-The live `index.html` remains the earlier schematic prototype. P02.3 adds distinct landmark symbols, tropical canopies, landscape shading and a decorative ferry on the approved map. The richer illustrated-world treatment is still in progress. Evidence and publication status: [P02-GEOGRAPHY-REVIEW.md](docs/P02-GEOGRAPHY-REVIEW.md).
+The live `index.html` remains the earlier schematic prototype. P02.3 now defaults to a textured diorama: generated architectural/forest sprites, layered land edges, shallow-water light, bridge decks/piers/towers derived from the approved footprints, and optional water/ferry motion. Island/bridge focus presets, keyboard navigation, presentation switching that preserves camera position, mobile clusters and a compact attraction sheet improve exploration. The richer illustrated-world treatment is still in progress; architecture and terrain are artistic interpretations. Evidence and publication status: [P02-GEOGRAPHY-REVIEW.md](docs/P02-GEOGRAPHY-REVIEW.md). Asset origin and prompt: [artwork notes](review/assets/README.md).
+
+The offline review including its embedded 455 KB atlas remains below 2 MB. It makes no third-party requests. Pin DOM is reused while panning, pointer rendering is limited to animation frames, and each presentation is cached. Reduced-motion preference is respected and motion can be disabled explicitly.
 
 ### Develop and verify
 

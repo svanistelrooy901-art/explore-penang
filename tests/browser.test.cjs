@@ -37,8 +37,8 @@ test('desktop: both map modes, close-up, discovery, quest and real official link
   assert.equal(await page.locator('.bridge').count(),2);
   assert.equal(await page.locator('.landmark-art').count(),8);
   await page.getByRole('button',{name:'George Town close-up'}).click();
-  const symbol=await page.locator('.landmark-art[data-art="kho"]').boundingBox();
-  assert(symbol.width<170,'landmark symbols should not grow over the close-up map');
+  const symbolWidth=await page.locator('.landmark-art[data-art="kho"]>svg').evaluate(e=>Number(e.getAttribute('width'))*e.parentElement.getScreenCTM().a);
+  assert(symbolWidth<170,'the clipped landmark viewport should not grow over the close-up map');
   await page.getByRole('button',{name:'North-up reference',exact:true}).click();
   await page.getByRole('button',{name:'George Town close-up'}).click();
   await page.locator('.pin[data-id="fort"]').focus();await page.keyboard.press('Enter');
@@ -53,6 +53,10 @@ test('desktop: both map modes, close-up, discovery, quest and real official link
 test('mobile: no horizontal overflow; filters, zoom, reset and drag preserve crossings',async()=>{
   const {page,context,errors}=await setup({viewport:{width:390,height:844},hasTouch:true,isMobile:true});
   assert(await page.evaluate(()=>document.documentElement.scrollWidth<=document.documentElement.clientWidth+1));
+  await page.getByRole('button',{name:'Explore Penang Hill and Kek Lok Si'}).click();
+  assert.equal(await page.locator('.pin[data-id="hill"]').count(),1);
+  assert.equal(await page.locator('.pin[data-id="kek"]').count(),1);
+  await page.locator('#reset').click();
   await page.getByRole('button',{name:'Nature',exact:true}).click();
   assert.equal(await page.locator('.place-card:visible').count(),2);
   assert.equal(await page.locator('.bridge').count(),2);
@@ -100,5 +104,36 @@ test('downloaded HTML works as a standalone local file, including source-data do
   await page.locator('.map-attribution a[download]').click();const download=await downloadPromise;
   assert.equal(download.suggestedFilename(),'geography.geojson');
   const content=JSON.parse(fs.readFileSync(await download.path(),'utf8'));assert.equal(content.features.length,6);
+  assert.deepEqual(errors,[]);await context.close();
+});
+test('drag reuses pins and does not swallow the next selection; keyboard navigation works',async()=>{
+  const {page,context,errors}=await setup();
+  await page.evaluate(()=>{window.pinChanges=0;new MutationObserver(records=>window.pinChanges+=records.filter(r=>r.type==='childList').length).observe(document.getElementById('pins'),{childList:true});});
+  const box=await page.locator('#map').boundingBox();
+  await page.mouse.move(box.x+20,box.y+100);await page.mouse.down();await page.mouse.move(box.x+70,box.y+120,{steps:8});await page.mouse.up();
+  assert.equal(await page.evaluate(()=>window.pinChanges),0,'pan should reuse landmark DOM');
+  await page.locator('.pin[data-id="mainland"]').click();
+  assert.match(await page.locator('#detail').innerText(),/Bukit Mertajam/);
+  await page.locator('#map').focus();await page.keyboard.press('Home');
+  assert.match(await page.locator('#camera').getAttribute('transform'),/scale\(1\)/);
+  await page.keyboard.press('+');assert.match(await page.locator('#camera').getAttribute('transform'),/scale\(1\.35\)/);
+  await page.keyboard.press('ArrowLeft');assert.notEqual(await page.locator('#camera').getAttribute('transform'),'translate(0 0) scale(1.35)');
+  assert.deepEqual(errors,[]);await context.close();
+});
+test('presets preserve crossings; presentation, motion and mobile profile work',async()=>{
+  const {page,context,errors}=await setup({viewport:{width:390,height:844},hasTouch:true,isMobile:true});
+  await page.getByRole('button',{name:'Both bridges',exact:true}).click();
+  const before=await page.locator('#camera').getAttribute('transform');
+  await page.getByRole('button',{name:'North-up reference',exact:true}).click();
+  assert(!/scale\(1\)/.test(await page.locator('#camera').getAttribute('transform')),'mode switch should preserve zoom');
+  await page.getByRole('button',{name:'Illustrated depth',exact:true}).click();
+  const after=await page.locator('#camera').getAttribute('transform');
+  const numbers=s=>s.match(/-?[\d.]+/g).map(Number);
+  numbers(before).forEach((v,i)=>assert(Math.abs(v-numbers(after)[i])<1e-6));
+  await page.getByRole('button',{name:'Motion on',exact:true}).click();assert.equal(await page.locator('#motion').getAttribute('aria-pressed'),'false');
+  await page.locator('[data-place="hill"]').click();
+  assert.equal(await page.locator('#detail').evaluate(e=>getComputedStyle(e).position),'fixed');
+  await page.getByRole('button',{name:'Close attraction profile'}).click();
+  assert.notEqual(await page.locator('#detail').evaluate(e=>getComputedStyle(e).position),'fixed');
   assert.deepEqual(errors,[]);await context.close();
 });

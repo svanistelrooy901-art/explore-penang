@@ -63,3 +63,19 @@ Geography review is complete: Mamu's reply **“approved”** on 16 October 2026
 P02.3 now replaces generic conifers/buildings with broadleaf trees, palms, distinct fort/clanhouse/temple/hill/jetty/market symbols and a decorative ferry. Landmarks remain anchored to the approved POI coordinates and limit growth on close-up so they do not obscure the map. Symbols and landscape shading are illustrative, not measured footprints, terrain or land use.
 
 Remaining: complete the detailed illustrated-world treatment, improve overview/mobile labels, verify venue entrances/accessibility, perform real-device QA and prepare publication. No ticket sales, affiliate tracking, ads or backend is active.
+
+## P02.3 diorama pass — 16 October 2026
+
+Compared directly with the approved concept image available in this conversation. This increment is a substantially more detailed 3D-inspired illustration, not a completed reproduction of that concept.
+
+| Concept feature | Implemented in this pass | Remaining gap |
+| --- | --- | --- |
+| Textured terrain and dense foliage | Reusable transparent forest/hill sprites, overlapping canopies and layered rock/shore edges | Stylized elevation, repeated foliage and visible mainland patches; not continuous measured relief |
+| Detailed landmark architecture | Generated decorative symbols and illustrated profile/card previews | Symbolic interpretations; architectural accuracy needs further reference work, especially Khoo Kongsi |
+| Bridges with depth | Road decks, piers, shadows and cable/tower symbols; derived centre lines remain inside both approved footprints | Towers and engineering details are illustrative |
+| Turquoise water and atmosphere | Shallow-water halos, wave texture, light glints, haze and decorative ferry motion | Simpler water/lighting than the concept render |
+| Readable interactive discovery | Touch-sized pins, mobile regional clustering, close-up presets, keyboard navigation and mobile attraction sheet | Dense desktop George Town labels and additional real-device QA remain |
+
+Validation for this pass: **12 core/geography checks and 7 Chromium browser scenarios** passed locally. Added coverage checks approved-data fingerprints, centre-preserving presentation changes, derived bridge details, focus bounds, DOM reuse during pan, selecting a landmark after dragging, touch clusters, mobile profiles and motion controls. Existing discovery, quest, deep-link, sharing controls and official outbound links remain. The offline document is under 2 MB; the atlas is 455,166 bytes. Remote CI must be checked at the new head.
+
+Desktop (1440px), mobile (390px) and mobile attraction-state screenshots are delivered in the conversation for visual review. No approved geographic file, fingerprint, live entry page, DNS or Pages setting was changed. PR #1 remains draft; explicit owner approval is still required before merge or production publishing.
