@@ -1,6 +1,6 @@
 # P02.2 — Geographic accuracy review
 
-**Status, 15 October 2026:** implemented draft; owner geography approval pending. Branch: `review/p02-geography`. The repository and branch are public; this work has not been deployed to GitHub Pages. Do not merge or change Pages settings before Mamu approves the geographic draft.
+**Status, 16 October 2026:** Mamu approved the P02.2 geographic draft in reply to the presented review, against commit `18aa68460763b94b96c972f35a6af6e743d6d9a5`. [Approval record](geography-approval.json) locks the source-data fingerprints. P02.3 illustration development continues on `review/p02-geography`. This work has not been deployed to GitHub Pages; final visual work and publication remain outstanding.
 
 ## Concrete review material
 
@@ -51,13 +51,15 @@ Both views use the same data. The depth study adds an affine presentation transf
 
 ## Validation
 
-- **9 core/geographic tests passed:** orientation, bridge IDs/extents/order, ferry extents, source versions, closed geometry, real POI coordinates, safe URLs, immutable rendering, zoom math, corrupt storage/hash recovery and output size/attribution.
+- **10 core/geographic tests passed:** orientation, bridge IDs/extents/order, ferry extents, source versions, closed geometry, real POI coordinates, safe URLs, immutable rendering, zoom math, corrupt storage/hash recovery and output size/attribution, and approved-source fingerprints.
 - **5 Chromium browser scenarios passed:** desktop and 390×844 mobile; filters, drag, pinch/button zoom, reduced motion, keyboard selection, quest/progress persistence, malformed hash, blocked storage, no third-party requests and standalone-file data download.
 - Desktop and mobile screenshots inspected locally. Real-device iOS/Android and screen-reader testing remain outstanding.
 - Deterministic build and `git diff --check` pass. CI runs checks only and has no deployment step. Remote CI must be read from the PR; local passes are not GitHub runs.
 
 ## Owner review and next development
 
-Mamu reviews the island outline, west/east relationship, both bridge landings, ferry alignment and representative pins. Record corrections or explicit geographic approval before merge/publication. Geography approval does not imply final art approval.
+Geography review is complete: Mamu's reply **“approved”** on 16 October 2026 accepts the presented island outline, west/east relationship, both bridge footprints, ferry alignment and representative pins. Geography approval does not mark the detailed art treatment complete. Tests reject changes to any approved source file unless the approval record is deliberately updated through a new review.
 
-After approval: richer landmark/landscape art against fixed geometry, better overview/mobile labels, venue entrance/accessibility verification, real-device QA and a separate publication review. No ticket sales, affiliate tracking, ads or backend is active.
+P02.3 now replaces generic conifers/buildings with broadleaf trees, palms, distinct fort/clanhouse/temple/hill/jetty/market symbols and a decorative ferry. Landmarks remain anchored to the approved POI coordinates and limit growth on close-up so they do not obscure the map. Symbols and landscape shading are illustrative, not measured footprints, terrain or land use.
+
+Remaining: complete the detailed illustrated-world treatment, improve overview/mobile labels, verify venue entrances/accessibility, perform real-device QA and prepare publication. No ticket sales, affiliate tracking, ads or backend is active.

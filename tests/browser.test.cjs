@@ -35,6 +35,10 @@ test('desktop: both map modes, close-up, discovery, quest and real official link
   await page.getByRole('button',{name:'Illustrated depth',exact:true}).click();
   assert.equal(await page.getByRole('button',{name:'Illustrated depth',exact:true}).getAttribute('aria-pressed'),'true');
   assert.equal(await page.locator('.bridge').count(),2);
+  assert.equal(await page.locator('.landmark-art').count(),8);
+  await page.getByRole('button',{name:'George Town close-up'}).click();
+  const symbol=await page.locator('.landmark-art[data-art="kho"]').boundingBox();
+  assert(symbol.width<170,'landmark symbols should not grow over the close-up map');
   await page.getByRole('button',{name:'North-up reference',exact:true}).click();
   await page.getByRole('button',{name:'George Town close-up'}).click();
   await page.locator('.pin[data-id="fort"]').focus();await page.keyboard.press('Enter');

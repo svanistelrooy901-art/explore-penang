@@ -2,7 +2,7 @@
 
 ## P02.2 geography review — 15 October 2026
 
-The geographic draft is implemented on `review/p02-geography`. Open **[review.html](review.html)** directly in a browser; it works offline and includes its source data. This branch is awaiting geographic approval before merge or publication.
+Mamu approved the geographic draft on **16 October 2026**, against commit `18aa684`. The approved source files are fingerprinted in [geography-approval.json](docs/geography-approval.json) and checked by tests. Illustration work continues on `review/p02-geography`. Open **[review.html](review.html)** directly in a browser; it works offline and includes its source data.
 
 - North-up map assembled from real OSM coastline and state-boundary member ways.
 - Both road bridges and separate George Town–Butterworth ferry routes.
@@ -11,7 +11,7 @@ The geographic draft is implemented on `review/p02-geography`. Open **[review.ht
 - Pointer drag, wheel/button zoom, touch pinch, keyboard selection, deep links and safe recovery from unavailable/corrupt storage.
 - No runtime mapping API, third-party script, analytics or tile request.
 
-The live `index.html` remains the earlier schematic prototype. This review is a geographic foundation and early depth study; the detailed illustrated-world treatment in the approved art reference is still future work. Evidence and publication gate: [P02-GEOGRAPHY-REVIEW.md](docs/P02-GEOGRAPHY-REVIEW.md).
+The live `index.html` remains the earlier schematic prototype. P02.3 adds distinct landmark symbols, tropical canopies, landscape shading and a decorative ferry on the approved map. The richer illustrated-world treatment is still in progress. Evidence and publication status: [P02-GEOGRAPHY-REVIEW.md](docs/P02-GEOGRAPHY-REVIEW.md).
 
 ### Develop and verify
 

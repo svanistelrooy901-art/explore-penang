@@ -59,6 +59,9 @@
     camera.x = C.clamp(camera.x, 1100 - 1100 * camera.scale - pad, pad);
     camera.y = C.clamp(camera.y, 880 - 880 * camera.scale - pad, pad);
     el('camera').setAttribute('transform', `translate(${camera.x} ${camera.y}) scale(${camera.scale})`);
+    svg.querySelectorAll('.landmark-art').forEach(node=>{
+      node.setAttribute('transform',`translate(${node.dataset.artX} ${node.dataset.artY}) scale(${1/Math.max(1,camera.scale/1.6)})`);
+    });
     el('zoomIn').disabled = camera.scale >= 14;
     el('zoomOut').disabled = camera.scale <= .85;
     pins();

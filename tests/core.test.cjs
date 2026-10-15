@@ -79,6 +79,14 @@ test('review output is self-contained, attributed and explicitly withheld from p
   const html=fs.readFileSync('review.html','utf8');
   assert(!/\b(?:src|href)="https?:\/\/[^\"]+\.(?:js|css)/.test(html));
   assert(html.includes('© OpenStreetMap contributors'));assert(html.includes('noindex,nofollow'));
-  assert(html.includes('Awaiting Mamu’s approval'));assert(!html.includes('/*__'));
+  assert(html.includes('Geography approved'));assert(html.includes('Not published'));assert(!html.includes('/*__'));
   assert(html.length<1000000,'keep the self-contained review under 1 MB');
+});
+test('illustration work preserves the exact geographic files approved by the owner',()=>{
+  const crypto=require('node:crypto');
+  const approval=JSON.parse(fs.readFileSync('docs/geography-approval.json','utf8'));
+  assert.equal(approval.status,'approved');
+  for(const [file,digest] of Object.entries(approval.files)){
+    assert.equal(crypto.createHash('sha256').update(fs.readFileSync(file)).digest('hex'),digest,`${file}: approved geometry changed`);
+  }
 });
