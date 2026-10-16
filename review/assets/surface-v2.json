@@ -3,12 +3,13 @@
   "inputs": [
     "scripts/bake_surface.cjs",
     "scripts/coastal_segments.py",
-    "data/source/state.osm",
+    "review/assets/coastal-recipe-v1.json",
+    "data/source-receipts.json",
     "data/geography.geojson",
     "review/assets/landscape-v2.webp",
     "review/assets/georgetown-material-v2.webp"
   ],
-  "input_sha256": "66cc5372185412d27c1ee6cdb47af3d31d86aafa9823712bf36b000d57dd8603",
+  "input_sha256": "41bf16d5ccb0eac02195173d78f955da88e7d63d870e59993f856f336f27b376",
   "town": {
     "x": 390,
     "y": 266,

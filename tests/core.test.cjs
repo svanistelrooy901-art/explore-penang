@@ -153,3 +153,24 @@ test('shore artwork excludes administrative borders and uses only approved coast
   assert.deepEqual(surface.coastal_way_ids,[...ids]);
   assert.deepEqual(surface.excluded_boundary_ways,coast.excluded_boundary_ways);
 });
+test('coastal art builds without ignored source caches and rejects invalid recipes',()=>{
+  const {execFileSync,spawnSync}=require('node:child_process');
+  const path=require('node:path'),os=require('node:os');
+  const root=fs.mkdtempSync(path.join(os.tmpdir(),'penang-coast-'));
+  const helper='scripts/coastal_segments.py',recipeFile='review/assets/coastal-recipe-v1.json';
+  try{
+    for(const file of [helper,recipeFile,'data/geography.geojson','data/source-receipts.json']){
+      const target=path.join(root,file);fs.mkdirSync(path.dirname(target),{recursive:true});fs.copyFileSync(file,target);
+    }
+    assert(!fs.existsSync(path.join(root,'data/source')));
+    const run=()=>execFileSync('python3',[helper],{cwd:root,encoding:'utf8'});
+    assert.equal(run(),execFileSync('python3',[helper],{encoding:'utf8'}),'clean checkout derives identical shore paths');
+    const original=JSON.parse(fs.readFileSync(recipeFile,'utf8'));
+    for(const corrupt of [r=>r.segments[0].step=0,r=>r.source.sha256='unapproved',r=>r.excluded_boundary_ways.push(r.segments[0].way_id)]){
+      const recipe=structuredClone(original);corrupt(recipe);
+      fs.writeFileSync(path.join(root,recipeFile),JSON.stringify(recipe));
+      const result=spawnSync('python3',[helper],{cwd:root,encoding:'utf8'});
+      assert.equal(result.status,1);assert.match(result.stderr,/ValueError: Coastal art/);
+    }
+  }finally{fs.rmSync(root,{recursive:true,force:true});}
+});

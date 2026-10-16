@@ -18,7 +18,7 @@ const tsvg=`<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="944" vi
 const digest=files=>{const h=crypto.createHash('sha256');for(const file of files)h.update(fs.readFileSync(file));return h.digest('hex');};
  await sharp(Buffer.from(svg)).webp({quality:65,alphaQuality:85,effort:6}).toFile('review/assets/world-surface-v2.webp');
  await sharp(Buffer.from(tsvg)).webp({quality:67,alphaQuality:85,effort:6}).toFile('review/assets/georgetown-surface-v2.webp');
- const inputs=['scripts/bake_surface.cjs','scripts/coastal_segments.py','data/source/state.osm','data/geography.geojson','review/assets/landscape-v2.webp',townSource];
+ const inputs=['scripts/bake_surface.cjs','scripts/coastal_segments.py','review/assets/coastal-recipe-v1.json','data/source-receipts.json','data/geography.geojson','review/assets/landscape-v2.webp',townSource];
  const outputs=['review/assets/world-surface-v2.webp','review/assets/georgetown-surface-v2.webp'];
  fs.writeFileSync('review/assets/surface-v2.json',JSON.stringify({description:'Static artwork clipped to exact approved land geometry; no measured elevation, land use or street layout.',inputs,input_sha256:digest(inputs),town,coastal_way_ids:coastal.segments.map(s=>s.way_id),excluded_boundary_ways:coastal.excluded_boundary_ways,assets:Object.fromEntries(outputs.map(f=>[f,{bytes:fs.statSync(f).size,sha256:digest([f])}]))},null,2)+'\n');
  console.log(outputs.map(f=>f+': '+fs.statSync(f).size+' bytes').join('\n'));
