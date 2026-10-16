@@ -168,7 +168,8 @@ test('320px layout, keyboard profile dismissal and hostile fragments remain usab
   assert.equal(await page.locator('#progressText').innerText(),'0 / 8');
   await page.locator('[data-place="kho"]').click();
   assert.match(await page.locator('#detail').innerText(),/Khoo Kongsi/);
-  assert.equal(await page.locator('#detail .art-thumbnail').getAttribute('viewBox'),'768 0 384 384');
+  const crop=(await page.locator('#detail .art-thumbnail').getAttribute('viewBox')).split(' ').map(Number);
+  assert(crop[0]>768&&crop[2]<384,'the measured Khoo window should exclude the neighbouring temple cutout');
   await page.keyboard.press('Escape');
   assert.equal(await page.locator('#detail.is-selected').count(),0);
   assert.equal(await page.evaluate(()=>document.activeElement.id),'map');
@@ -215,5 +216,23 @@ test('mobile close-up pin labels and their combined touch target select a place'
   await page.locator('#georgetown').click();
   await page.locator('.pin[data-id="fort"] .label-bg').tap();
   assert.match(await page.locator('#detail').innerText(),/Fort Cornwallis/);
+  assert.deepEqual(errors,[]);await context.close();
+});
+test('mobile discovery retains visible map context and a readable selected landmark',async()=>{
+  const {page,context,errors}=await setup({viewport:{width:390,height:844},hasTouch:true,isMobile:true});
+  await page.locator('[data-place="kho"]').click();
+  assert.equal(await page.evaluate(()=>document.activeElement.id),'detail');
+  assert.equal(await page.getByRole('region',{name:'Khoo Kongsi',exact:true}).count(),1);
+  const pin=await page.locator('.pin[data-id="kho"] .pin-dot').boundingBox();
+  const sheet=await page.locator('#detail').boundingBox();
+  assert(pin.y>=0&&pin.y+pin.height<sheet.y,'selected map point must be visible above the attraction sheet');
+  const artWidth=await page.locator('.landmark-art[data-art="kho"]>svg').evaluate(e=>Number(e.getAttribute('width'))*e.parentElement.getScreenCTM().a);
+  assert(artWidth>=95&&artWidth<=130,'selected architectural detail should remain readable on the phone');
+  await page.keyboard.press('Escape');assert.equal(await page.evaluate(()=>document.activeElement.id),'map');
+  await page.setViewportSize({width:320,height:740});
+  await page.locator('[data-place="fort"]').click();
+  const smallPin=await page.locator('.pin[data-id="fort"] .pin-dot').boundingBox(),smallSheet=await page.locator('#detail').boundingBox();
+  assert(smallPin.y>=0&&smallPin.y+smallPin.height<smallSheet.y);
+  assert(await page.evaluate(()=>document.documentElement.scrollWidth<=320));
   assert.deepEqual(errors,[]);await context.close();
 });

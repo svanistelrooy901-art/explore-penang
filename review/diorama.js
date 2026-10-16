@@ -4,10 +4,13 @@
   const C=typeof module!=='undefined'&&module.exports?require('./map-core.js'):root.PenangMap;
   const A=typeof module!=='undefined'&&module.exports?require('./map-art.js'):root.PenangArt;
   const n=v=>Number(v.toFixed(2));
-  const crops={hill:[0,0,1/3,1/3],kek:[1/3,0,1/3,1/3],kho:[2/3,0,1/3,1/3],fort:[0,1/3,1/3,1/3],jetty:[1/3,1/3,1/3,1/3],town:[2/3,1/3,1/3,1/3],beach:[0,2/3,1/3,1/3],food:[1/3,2/3,1/3,1/3],mainland:[2/3,2/3,1/3,1/3]};
+  // Measured crop windows avoid neighbouring cutouts after the targeted edit.
+  const cropPixels={hill:[0,0,396,410],kek:[396,0,398,410],kho:[794,0,358,410],fort:[0,410,420,370],jetty:[420,410,353,370],town:[773,410,379,370],beach:[0,780,396,372],food:[409,780,373,372],mainland:[782,780,370,372]};
+  const crops=Object.fromEntries(Object.entries(cropPixels).map(([key,r])=>[key,r.map(v=>v/1152)]));
   function sprite(key,x,y,w,h,extra=''){
     const box=crops[key].map(v=>n(v*1152)).join(' ');
-    return `<g transform="translate(${n(x)} ${n(y)})" ${extra}><svg data-sprite="${key}" x="${-w/2}" y="${-h*.80}" width="${w}" height="${h}" viewBox="${box}" overflow="hidden"><g clip-path="url(#sprite-crop-${key})"><use href="#diorama-atlas"/></g></svg></g>`;
+    const grounded=key==='beach'?' transform="translate(6 20)"':'';
+    return `<g transform="translate(${n(x)} ${n(y)})" ${extra}><svg data-sprite="${key}"${grounded} x="${-w/2}" y="${-h*.80}" width="${w}" height="${h}" viewBox="${box}" overflow="hidden"><g clip-path="url(#sprite-crop-${key})"><use href="#diorama-atlas"/></g></svg></g>`;
   }
   function bridgeSpine(geometry,count=40){
     const ring=geometry.coordinates[0],xs=ring.map(p=>p[0]),lo=Math.min(...xs),hi=Math.max(...xs),out=[];
@@ -52,7 +55,7 @@
     }).join('');
     const ferry=['ferry-to-island','ferry-to-mainland'].map(id=>`<path data-feature="${id}" d="${path(F[id].geometry,mode)}" stroke="#dcf1d5" stroke-width="1.2" stroke-dasharray="4 6" fill="none" opacity=".7" vector-effect="non-scaling-stroke"/>`).join('');
     const route=F['ferry-to-island'].geometry.coordinates,[fx,fy]=pos(route[Math.floor(route.length/2)]);
-    const boat=`<g class="sea-decoration" data-art-x="${fx}" data-art-y="${fy}" transform="translate(${fx} ${fy})" aria-hidden="true"><g class="ferry-float" data-art="ferry-symbol"><title>Decorative ferry; not a live position</title><path d="M-9 9q-13 4-27 0m28 6q-19 4-35-1" fill="none" stroke="#d8f4e9" stroke-width="1.3" opacity=".6"/>${A.ferry(0,0,.5)}</g></g>`;
+    const boat=`<g class="sea-decoration" data-art-x="${fx}" data-art-y="${fy}" transform="translate(${fx} ${fy})" aria-hidden="true"><g class="ferry-float" data-art="ferry-symbol"><title>Decorative ferry; not a live position</title><path d="M-9 9q-13 4-27 0m28 6q-19 4-35-1" fill="none" stroke="#d8f4e9" stroke-width="1.3" opacity=".6"/>${data.ferry?`<ellipse cy="8" rx="25" ry="6" fill="#064e63" opacity=".2"/><svg x="-36" y="-25" width="72" height="50" viewBox="0 80 512 352" overflow="hidden"><image id="ferry-texture" width="512" height="512" href="${data.ferry}"/></svg>`:A.ferry(0,0,.5)}</g></g>`;
     const sail=(x,y,s)=>`<g transform="translate(${x} ${y}) scale(${s})" aria-hidden="true"><path d="M-10 7q10 7 21-1M0-16V7" stroke="#f3ebcf" fill="none" stroke-width="1.6"/><path d="M-2-14L-11 3H-2ZM1-12L9 2H1Z" fill="#fff5d9"/><path d="M-16 13q-12 3-25 0" stroke="#a8deda" stroke-width="1" fill="none" opacity=".6"/></g>`;
     const label=(coord,text,kind='regional',size=12)=>{const[x,y]=pos(coord);return `<text x="${n(x)}" y="${n(y)}" class="geo-label ${kind}" font-size="${size}" text-anchor="middle">${C.escape(text)}</text>`;};
     const labels=label([100.233,5.322],'PENANG ISLAND','regional',14)+label([100.466,5.46],'SEBERANG PERAI','regional',13)+label([100.366,5.387],'PENANG STRAIT','water-label',10)+label([100.354,5.333],'01 · PENANG BRIDGE','crossing-label primary-crossing',10)+label([100.36,5.24],'02 · SECOND BRIDGE','crossing-label',10)+label([100.384,5.418],'FERRY','crossing-label',9);

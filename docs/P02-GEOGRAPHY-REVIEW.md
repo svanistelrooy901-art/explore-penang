@@ -103,3 +103,16 @@ Security: npm audit reported **zero known dependency vulnerabilities**, includin
 Review screenshots: [full world](screenshots/p024-world.webp), [George Town](screenshots/p024-georgetown.webp), [mobile](screenshots/p024-mobile.webp), [mobile attraction](screenshots/p024-mobile-profile.webp). Full PNGs and a concept comparison accompany the Work handoff. See [art provenance and production prompts](../review/assets/README.md).
 
 P02 remains **illustration in progress**. Geometry, coordinates, receipts, geographic approval records, production entry page, DNS and Pages settings are untouched. Keep PR #1 in draft; explicit owner approval is required before merge or publication.
+
+### P02.4 refinement pass — coastline lighting, architecture and mobile context
+
+This pass retains the connected landscape and adds the following:
+
+- Coastal light/foam now follows only the 150 approved OSM relation members tagged as coastline. Eighteen inland/boundary members are excluded. Every derived vertex must exist in the frozen land geometry. The geographic source files are not rewritten.
+- The targeted v3 atlas corrects the fort's generic solid lighthouse into a white steel framework and refines the temple's octagonal pagoda. The source checks and complete built-in ImageGen edit prompt are in the artwork README. Measured crop windows remove adjacent-sprite bleed. Architecture still requires visual review.
+- A transparent miniature ferry replaces the flat vector vessel, using the same decorative route anchor. It is not a current-fleet engineering model or live position.
+- Mobile selection brings the map above the attraction sheet and focuses the selected point higher in the map. The selected miniature retains a readable screen size. Journal activation focuses a named attraction region; Escape returns to the map. Artwork placement changes do not change destination coordinates.
+
+Validation: **16 core/geography checks and 12 Chromium browser scenarios passed locally**, including 320px/390px map-to-profile visibility, selected-art readability, keyboard focus, coastal-member exclusion and exact approved-vertex membership. The latest 4× CPU-throttled local pan sample recorded **16.8 ms p95 frame interval and 1.0 ms p95 event dispatch** in both overview and George Town, with zero long tasks and no pin rebuilds (250/287 SVG nodes). The self-contained review is **1,671,300 bytes** and requests no third-party resources. Npm audit reports zero known dependency vulnerabilities. CI must be verified at the new commit.
+
+The desktop, George Town, mobile and mobile-profile screenshots above are refreshed for this pass. The Work handoff also includes the concept comparison. The improvement is visible in shoreline separation, landmark character and the mobile Explore → Discover → Visit transition. It does not complete P02: generated architecture, true elevation, detailed coastal realism, physical phone and screen-reader testing remain separate acceptance work. No merge or production publication is authorized by these test results.

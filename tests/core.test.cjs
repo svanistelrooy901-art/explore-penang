@@ -122,7 +122,7 @@ test('continuous terrain bake matches its source and stays outside geographic da
   assert.equal(input.digest('hex'),surface.input_sha256,'rebake when surface inputs change');
   for(const [file,meta]of Object.entries(surface.assets))assert.equal(crypto.createHash('sha256').update(fs.readFileSync(file)).digest('hex'),meta.sha256);
   assert.match(fs.readFileSync('scripts/bake_surface.cjs','utf8'),/clip-path="url\(#clip\)"/);
-  assert.equal((html.match(/data:image\/webp;base64,/g)||[]).length,3,'one world, one town and one atlas, reused rather than duplicated');
+  assert.equal((html.match(/data:image\/webp;base64,/g)||[]).length,4,'world, town, landmark atlas and ferry assets are embedded once each');
   assert.notDeepEqual(D.crops.kho,D.crops.town,'Khoo Kongsi has its own architectural illustration');
 });
 test('camera flight has exact endpoints, finite bounded zoom and continuous centres',()=>{
@@ -140,4 +140,16 @@ test('dense bridge detail sampling respects concave approach footprints',()=>{
     const p=D.bridgeSpine(features[id].geometry,count);assert(p.length>=count-2);
     for(const point of p)assert(C.pointInGeometry(point,features[id].geometry));
   }
+});
+test('shore artwork excludes administrative borders and uses only approved coastline vertices',()=>{
+  const {execFileSync}=require('node:child_process');
+  const coast=JSON.parse(execFileSync('python3',['scripts/coastal_segments.py'],{encoding:'utf8'}));
+  const allowed=new Set(allPoints(features['penang-land'].geometry).map(p=>p.join(',')));
+  const ids=new Set(coast.segments.map(s=>s.way_id));
+  assert(coast.segments.length>100);assert(coast.excluded_boundary_ways.length>0);
+  for(const id of coast.excluded_boundary_ways)assert(!ids.has(id),'inland borders must not acquire foam or shallow-water lighting');
+  for(const segment of coast.segments)for(const p of segment.coordinates)assert(allowed.has(p.join(',')),'shore art must not invent a coast vertex');
+  const surface=JSON.parse(fs.readFileSync('review/assets/surface-v2.json'));
+  assert.deepEqual(surface.coastal_way_ids,[...ids]);
+  assert.deepEqual(surface.excluded_boundary_ways,coast.excluded_boundary_ways);
 });

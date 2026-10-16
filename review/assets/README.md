@@ -13,7 +13,7 @@ The tool returned a 1254px PNG. The runtime uses measured crop windows rather th
 
 ## P02.4 continuous world
 
-Current runtime: `diorama-atlas-v2.webp` (1152px), `world-surface-v2.webp` (1400×1120) and `georgetown-surface-v2.webp` (1200×944). Built-in ImageGen created the atlas, continuous landscape and heritage material. Actual generated sizes were 1254×1254 for the atlas and 1402×1122 for each ground material. Technical WebP transcoding preserves atlas alpha. Generated PNG originals remain outside the repository.
+Current runtime: `diorama-atlas-v3.webp` (1152px), `world-surface-v2.webp` (1400×1120) and `georgetown-surface-v2.webp` (1200×944). Built-in ImageGen created the atlas, continuous landscape and heritage material. Actual generated sizes were 1254×1254 for the atlas and 1402×1122 for each ground material. Technical WebP transcoding preserves atlas alpha. Generated PNG originals remain outside the repository.
 
 The atlas now gives Khoo Kongsi its own ornate clan-house illustration and separates the hill summit from Kek Lok Si. Architectural motifs were informed by the official temple and Penang Hill pages already cited in the source review; these remain generated interpretations requiring architectural review. No generated roof, street, elevation or land-cover detail is a geographic observation.
 
@@ -56,6 +56,7 @@ The left ridge blends into a dense heritage town fabric on its east side around 
 All regions blend into each other through continuous connected natural terrain, roads and ground vegetation. Photoreal miniature model materials, finely detailed, warm tropical richness, orthographic elevated 50-degree aerial view, same camera direction as the reference concept, coherent lighting. No cartographic symbols, no repeated tile pattern, no simplified geometric shapes.
 Preserve general ridge and town distribution of the layout guide but add beautiful natural detail throughout the complete rectangle. No exact architectural or geographic survey claim.
 Output a detailed 2000px-plus opaque landscape image.
+
 ```
 
 ### Heritage ground prompt
@@ -68,4 +69,42 @@ Make one continuous dense heritage neighbourhood of George Town, Penang, viewed 
 No large landmarks: the temple, fort, market and jetties will be added separately by the app. No pagoda, mosque dome, giant temple, enormous building or tower.
 Frame a complete rectangular ground surface of streets and built fabric filling all edges, a little greener and more tree shaded around the edges so it blends with a larger tropical landscape. No water, no coastline, no island edge, no raised plinth, no floating cutout, no UI, no letters, no signage, no map labels.
 Opaque landscape image, about 5:4 ratio, high detail. Architectural illustration, not a surveyed street map.
+```
+
+
+## P02.4 refinement — architecture and coastal lighting
+
+Current landmark atlas is `diorama-atlas-v3.webp`. A targeted built-in ImageGen edit replaced Fort Cornwallis's solid lighthouse with an open white steel framework and refined the pagoda's stacked octagonal storeys. Other cells retain their subjects, layout and visual treatment, with small generative differences. This remains an artistic interpretation, not an architectural survey.
+
+References checked: [Marine Department July 2020 bulletin](https://www.marine.gov.my/wp-content/uploads/2024/01/20201008121208-a8119-buletin-jlm-julai-2020-1.pdf), which describes a white steel framework tower, and [Kek Lok Si's official history](https://kekloksitemple.com/?page_id=5), which describes the pagoda's combined Chinese, Thai and Burmese architecture. No attraction/source coordinate or official link was changed.
+
+`coastal_segments.py` reads the cached OSM state snapshot, selects only approved relation members tagged `natural=coastline`, and rejects vertices outside the approved land snapshot. Shallow water and foam are painted only on those segments; inland administrative boundaries receive no coastal halo. The same exact land outline is still used for clipping. Static art bakes keep this detail off the live SVG render path.
+
+On small screens, selected architectural sprites now retain a readable size, and choosing a place brings the map point above the attraction sheet. Journal activation focuses the named attraction region; Escape returns to the map.
+
+### Targeted atlas edit prompt
+
+```text
+Use case: precise-object-edit.
+Asset type: existing Explore Penang transparent 3×3 miniature landmark atlas, targeted architectural correction.
+EDIT TARGET: supplied diorama-atlas-v2 image. Preserve its transparent background, exact 3×3 grid/cell positions, perspective, warm upper-left light, object scale, cutout boundaries, and all seven untargeted cells.
+Change ONLY these two cells:
+1. Row 2 column 1, Fort Cornwallis: replace the inaccurate solid cylindrical white lighthouse with a slender WHITE STEEL SKELETAL FRAMEWORK lighthouse: four slightly tapering open lattice legs, diagonal cross-braces, small enclosed upper watchroom and lantern/gallery. Open air visible through framework, like a small white pyramidal harbour signal tower. Keep low reddish brick star-bastion ramparts, grassy parade courtyard, black cannons, small guard buildings and coconut palms. No large stone lighthouse and no tall castle. This is an interpretive symbol, not measured engineering.
+2. Row 1 column 2, Kek Lok Si: refine the cream Pagoda of Ten Thousand Buddhas into its recognizable tapered white octagonal lower storeys, Thai-influenced middle and gold Burmese crown. Make seven readable stacked storeys rather than a generic cylindrical cone. Keep the pagoda separate from red-roof prayer halls, granite terrace steps, tropical gardens and the smaller upper pavilion. Preserve overall silhouette and cell size; do not add a giant new structure.
+Keep Penang Hill, Khoo Kongsi, Chew Jetty, town shophouses, beach, market and mainland cells unchanged. Each sprite must remain isolated inside its own equal 1/3-square crop window; preserve transparent inter-cell margins. No text, grid lines, labels, background, UI, lettering or watermark. Maintain photographic miniature model detail rather than cartoon icons.
+Actual alpha transparency required.
+```
+
+
+### Ferry model
+
+`ferry-v1.webp` is a 512px transparent model generated with the built-in ImageGen tool and technically resized/encoded to WebP. It replaces the flat vector boat while retaining the existing decorative position on the approved ferry route. It is a Penang-inspired symbol, not a measured model of the current fleet or a live vessel position. Wake lines and optional bobbing remain code-native. The original generated PNG remains outside the repository.
+
+The v3 landmark atlas uses measured crop windows to remove neighbouring-cell bleed introduced by the targeted generation edit.
+
+```text
+Use case: stylized-concept.
+Asset type: one transparent production ferry sprite for the existing Explore Penang miniature map.
+Input image is the owner-approved style benchmark only. Create ONE beautifully detailed small Penang-inspired harbour passenger ferry as a photographic miniature model. White hull and superstructure, rich blue hull band, warm yellow-gold deck accents, two passenger levels, small wheelhouse, visible windows, slender deck railings, rescue rings and a few tiny seated passengers. Same elevated 45-degree aerial viewpoint and warm upper-left sunlight as the miniature world. Bow points toward lower left; stern toward upper right. Complete ferry visible with generous transparent padding. Realistic miniature materials and soft local contact shadow, no exaggerated cartoon shape. This is an illustrative ferry, not a precise real-vessel model.
+Genuine alpha transparency surrounding the whole ferry; no water, no wake, no island, no square base, no sky, no UI, no words, no logos, no text or watermark. Detailed silhouette readable at 60px. Compact isolated composition on a square canvas.
 ```

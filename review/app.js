@@ -6,9 +6,10 @@
   data.atlas=document.getElementById('diorama-atlas')?.getAttribute('href')||'';
   data.surface=document.getElementById('world-surface')?.getAttribute('href')||'';
   data.town=document.getElementById('georgetown-surface')?.getAttribute('href')||'';
+  data.ferry=document.getElementById('ferry-texture')?.getAttribute('href')||'';
   let thumbnailId=0;
   function artThumbnail(id){
-    const key=id,r=PenangDiorama.crops[key].map(v=>v*1152),box=r.join(' '),clip='thumbnail-'+(++thumbnailId);
+    const key=id,r=PenangDiorama.crops[key].map(v=>Number((v*1152).toFixed(2))),box=r.join(' '),clip='thumbnail-'+(++thumbnailId);
     return `<svg class="art-thumbnail" viewBox="${box}" overflow="hidden" aria-hidden="true"><defs><clipPath id="${clip}"><rect x="${r[0]}" y="${r[1]}" width="${r[2]}" height="${r[3]}"/></clipPath></defs><image clip-path="url(#${clip})" width="1152" height="1152" href="${data.atlas}"/></svg>`;
   }
   document.querySelectorAll('[data-place]').forEach(card=>card.insertAdjacentHTML('afterbegin',artThumbnail(card.dataset.place)));
@@ -74,11 +75,12 @@
     camera.y = C.clamp(camera.y, 880 - 880 * camera.scale - pad, pad);
     el('camera').setAttribute('transform', `translate(${camera.x} ${camera.y}) scale(${camera.scale})`);
     const unit=1/Math.max(.1,svg.getScreenCTM()?.a||1);
-    if(paintScale!==camera.scale||paintUnit!==unit){
+    if(paintScale!==camera.scale||paintUnit!==unit||paintSelected!==selected){
       paintScale=camera.scale;paintUnit=unit;
     el('mapFrame').classList.toggle('zoom-detail',camera.scale>3);
     svg.querySelectorAll('.landmark-art').forEach(node=>{
-      node.setAttribute('transform',`translate(${node.dataset.artX} ${node.dataset.artY}) scale(${1/Math.max(1,camera.scale/2.1)})`);
+      const limit=svg.clientWidth<600&&camera.scale>=4&&node.dataset.art===selected?1.65*unit:2.1;
+      node.setAttribute('transform',`translate(${node.dataset.artX} ${node.dataset.artY}) scale(${1/Math.max(1,camera.scale/limit)})`);
     });
     svg.querySelectorAll('.sea-decoration').forEach(node=>node.setAttribute('transform',`translate(${node.dataset.artX} ${node.dataset.artY}) scale(${1/Math.max(1,camera.scale/1.2)})`));
     for(const id of ['water','glitter'])svg.querySelector('#'+id)?.setAttribute('patternTransform',`scale(${1/Math.max(1,camera.scale/1.4)})`);
@@ -156,9 +158,10 @@
     el('illustrated').setAttribute('aria-pressed', mode === 'illustrated');
     applyCamera();
   }
-  function focusAt(coordinate, scale) {
+  function focusAt(coordinate, scale, forPlace=false) {
     const [x,y] = C.viewPoint(coordinate,mode);
-    moveCamera({scale,x:550-x*scale,y:440-y*scale});
+    const targetY=forPlace&&matchMedia('(max-width:850px)').matches?300:440;
+    moveCamera({scale,x:550-x*scale,y:targetY-y*scale});
   }
   function focusQuarter() { focusAt([100.3375,5.416], 12); toast('George Town close-up — select a numbered place.'); }
   function hillsCenter(){const p=places.filter(p=>p.id==='hill'||p.id==='kek');return [(p[0].coordinates[0]+p[1].coordinates[0])/2,(p[0].coordinates[1]+p[1].coordinates[1])/2];}
@@ -169,10 +172,12 @@
     if (category !== 'All' && category !== p.cat) { category = 'All'; categories(); }
     try { storage.setItem('explorePenangReviewDiscovered',JSON.stringify([...discovered])); } catch { /* in-memory discovery still works */ }
     progress(); cards(); pins();
-    if (focus) focusAt(p.coordinates,quarter.includes(id) ? 12 : 2.3);
+    if (focus) focusAt(p.coordinates,quarter.includes(id) ? 12 : 2.3,true);
     const query = encodeURIComponent(`${p.coordinates[1]},${p.coordinates[0]}`);
     el('detail').classList.add('is-selected');
-    el('detail').innerHTML = `<button class="dismiss-detail" id="closeDetail" aria-label="Close attraction profile">×</button><div class="detail-art" role="img" aria-label="Decorative illustration of ${C.escape(p.name)}">${artThumbnail(id)}</div><span class="eyebrow">${C.escape(p.cat)} · PLACE ${p.number}</span><h3>${C.escape(p.name)}</h3><p>${C.escape(p.description)}</p><div class="actions"><a target="_blank" rel="noopener noreferrer" href="${C.escape(p.official_url)}">${C.escape(p.official_label)} ↗</a><a class="secondary" target="_blank" rel="noopener noreferrer" href="https://www.google.com/maps/search/?api=1&query=${query}">View mapped point ↗</a><button id="sharePlace">Share ↗</button></div><p class="coordinate-note">${C.escape(p.coordinate_note)}. Confirm the correct visitor entrance with the venue.</p>`;
+    el('detail').setAttribute('role','region');el('detail').setAttribute('aria-labelledby','attractionTitle');
+    el('detail').innerHTML = `<button class="dismiss-detail" id="closeDetail" aria-label="Close attraction profile">×</button><div class="detail-art" role="img" aria-label="Decorative illustration of ${C.escape(p.name)}">${artThumbnail(id)}</div><span class="eyebrow">${C.escape(p.cat)} · PLACE ${p.number}</span><h3 id="attractionTitle">${C.escape(p.name)}</h3><p>${C.escape(p.description)}</p><div class="actions"><a target="_blank" rel="noopener noreferrer" href="${C.escape(p.official_url)}">${C.escape(p.official_label)} ↗</a><a class="secondary" target="_blank" rel="noopener noreferrer" href="https://www.google.com/maps/search/?api=1&query=${query}">View mapped point ↗</a><button id="sharePlace">Share ↗</button></div><p class="coordinate-note">${C.escape(p.coordinate_note)}. Confirm the correct visitor entrance with the venue.</p>`;
+    if(matchMedia('(max-width:850px)').matches)el('map-section').scrollIntoView({block:'start',behavior:reducedMotion.matches?'instant':'smooth'});
     el('closeDetail').onclick=()=>{el('detail').classList.remove('is-selected');svg.focus({preventScroll:true});};
     el('sharePlace').onclick = () => share(`${location.href.split('#')[0]}#${encodeURIComponent(p.id)}`);
     try { history.replaceState(null,'','#' + encodeURIComponent(p.id)); } catch { /* file preview still works */ }
@@ -202,7 +207,7 @@
   el('zoomIn').onclick = () => { moveCamera(C.zoomAt(camera,[550,440],1.35)); };
   el('zoomOut').onclick = () => { moveCamera(C.zoomAt(camera,[550,440],1/1.35)); };
   el('reset').onclick = () => {moveCamera({scale:1,x:0,y:0});};
-  el('placeList').querySelectorAll('button').forEach(card => card.onclick = () => {choose(card.dataset.place); el('journal').focus({preventScroll:true});});
+  el('placeList').querySelectorAll('button').forEach(card => card.onclick = () => {choose(card.dataset.place); el('detail').focus({preventScroll:true});});
   svg.addEventListener('wheel', event => { event.preventDefault(); stopFlight();camera=C.zoomAt(camera,point(event),event.deltaY<0?1.12:1/1.12);requestCamera(); },{passive:false});
   svg.addEventListener('dblclick',event=>{if(event.target.closest('.pin'))return;event.preventDefault();moveCamera(C.zoomAt(camera,point(event),2));});
   svg.addEventListener('keydown',event=>{
