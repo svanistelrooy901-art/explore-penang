@@ -79,3 +79,27 @@ Compared directly with the approved concept image available in this conversation
 Validation for this pass: **12 core/geography checks and 7 Chromium browser scenarios** passed locally. Added coverage checks approved-data fingerprints, centre-preserving presentation changes, derived bridge details, focus bounds, DOM reuse during pan, selecting a landmark after dragging, touch clusters, mobile profiles and motion controls. Existing discovery, quest, deep-link, sharing controls and official outbound links remain. The offline document is under 2 MB; the atlas is 455,166 bytes. Remote CI must be checked at the new head.
 
 Desktop (1440px), mobile (390px) and mobile attraction-state screenshots are delivered in the conversation for visual review. No approved geographic file, fingerprint, live entry page, DNS or Pages setting was changed. PR #1 remains draft; explicit owner approval is still required before merge or production publishing.
+
+## P02.4 visual fidelity and interactive world — 16 October 2026
+
+Compared desktop, 390px mobile and George Town close-up directly with the owner's approved “Wander and Discover” concept. This is a meaningful visual increment, not final art acceptance.
+
+| Benchmark | Current result | Remaining visual limit |
+| --- | --- | --- |
+| Continuous miniature terrain | Connected forested ridge and mainland fabric; shared warm lighting, soft shore light and raised edges | Illustrative height and land cover; simpler land/water transition than the concept |
+| Heritage architecture | Dedicated ornate Khoo Kongsi, separate hill summit and temple, stilt jetty, fort and market; finer George Town fabric on zoom | Generated interpretations; exact facade, roof, lighthouse and pavilion details require review; streets are decorative |
+| Tropical vegetation | Varied canopy, palms, orchards and planted town transitions across a continuous material | Source art may contain repeated motifs and invented land-use details |
+| Bridges and sea | More piers, cables, deck shading, small traffic symbols, boats, subtle waves, glints and haze | Engineering and vessel positions remain symbolic; no live service data |
+| Discovery | Interruptible animated focus, immediate reduced-motion camera, stable label sizes, keyboard filter focus/profile dismissal and 320px/390px layouts | Physical iOS/Android, screen-reader and prolonged gesture QA remain |
+
+Static art is baked from the exact approved land path into two compact textures. Both bridges and ferry routes remain source-derived layers. Dense bridge sampling uncovered a concave approach segment: selecting an interior intersection span fixes the decorative deck spine without changing the footprint. Source/output art hashes prevent stale bakes. Approved geographic files and fingerprints remain unchanged.
+
+Validation: **15 core/geography tests and 11 Chromium browser scenarios**. Coverage adds concave bridge sampling, art-bake integrity, camera interpolation/interruption, 320px overflow, dedicated Khoo art, filter focus, Escape dismissal, hostile fragments, bounded vessel/label scale, tappable mobile labels and panning cost. Journal, quests, progress, filters, official links, sharing controls, offline downloads and storage recovery remain.
+
+Performance sample: headless Chromium 153, 390×844, 4× CPU slowdown, software rendering, reduced motion, 72 pan frames per view. Final local run: overview recorded **33.3 ms p95 frame interval, 1.5 ms p95 event dispatch and 255 SVG nodes**; George Town recorded **16.8 ms p95 frame interval, 0.9 ms p95 event dispatch and 292 nodes**. Both recorded zero long tasks and zero pin rebuilds. CI repeats the benchmark with broad regression thresholds; this is not a guarantee for a particular phone. The standalone review remains below 2 MB with no third-party resources.
+
+Security: npm audit reported **zero known dependency vulnerabilities**, including the build-only Sharp dependency. Focused source review checked fragment/storage inputs, text escaping, embedded JSON, outbound links and artwork references. Browser cases retain malformed/hostile fragment recovery, blocked storage and no third-party requests. This is a focused development check, not an exhaustive audit.
+
+Review screenshots: [full world](screenshots/p024-world.webp), [George Town](screenshots/p024-georgetown.webp), [mobile](screenshots/p024-mobile.webp), [mobile attraction](screenshots/p024-mobile-profile.webp). Full PNGs and a concept comparison accompany the Work handoff. See [art provenance and production prompts](../review/assets/README.md).
+
+P02 remains **illustration in progress**. Geometry, coordinates, receipts, geographic approval records, production entry page, DNS and Pages settings are untouched. Keep PR #1 in draft; explicit owner approval is required before merge or publication.
