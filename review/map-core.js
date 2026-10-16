@@ -45,6 +45,13 @@
     const ratio = scale / camera.scale;
     return { scale, x: point[0] - (point[0] - camera.x) * ratio, y: point[1] - (point[1] - camera.y) * ratio };
   }
+  function cameraBetween(a,b,t){
+    t=clamp(t,0,1);
+    const scale=a.scale*Math.pow(b.scale/a.scale,t);
+    const ax=(550-a.x)/a.scale,ay=(440-a.y)/a.scale;
+    const bx=(550-b.x)/b.scale,by=(440-b.y)/b.scale;
+    return {scale,x:550-(ax+(bx-ax)*t)*scale,y:440-(ay+(by-ay)*t)*scale};
+  }
   function readProgress(storage, validIds) {
     try {
       const values = JSON.parse(storage.getItem('explorePenangReviewDiscovered') || '[]');
@@ -56,7 +63,7 @@
     catch { return null; }
   }
   function escape(value) { return String(value).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
-  const api = { BOUNDS, WIDTH, HEIGHT, UNIT, project, viewPoint, unviewPoint, reframe, fitPoints, pointInGeometry, clamp, zoomAt, readProgress, readHash, escape };
+  const api = { BOUNDS, WIDTH, HEIGHT, UNIT, project, viewPoint, unviewPoint, reframe, fitPoints, pointInGeometry, clamp, zoomAt, cameraBetween, readProgress, readHash, escape };
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
   else root.PenangMap = api;
 })(globalThis);

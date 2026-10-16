@@ -110,3 +110,34 @@ test('bridge art spines stay within the approved footprints and presets fit both
   const camera=C.fitPoints(points,'illustrated',120);
   for(const p of points){const [x,y]=C.viewPoint(p,'illustrated');assert(x*camera.scale+camera.x>=119&&x*camera.scale+camera.x<=981);assert(y*camera.scale+camera.y>=119&&y*camera.scale+camera.y<=761);}
 });
+test('continuous terrain bake matches its source and stays outside geographic data',()=>{
+  const crypto=require('node:crypto'),manifest=JSON.parse(fs.readFileSync('review/assets/terrain-v2.json'));
+  const hash=crypto.createHash('sha256').update(fs.readFileSync('scripts/build_terrain.cjs')).update(fs.readFileSync('data/geography.geojson')).digest('hex');
+  assert.equal(hash,manifest.source_sha256,'rebake when decorative terrain code changes');
+  assert.equal(crypto.createHash('sha256').update(fs.readFileSync('review/assets/terrain-v2.webp')).digest('hex'),manifest.asset_sha256);
+  assert.equal(manifest.width,2200);assert.equal(manifest.height,1760);
+  const html=fs.readFileSync('review.html','utf8');
+  const surface=JSON.parse(fs.readFileSync('review/assets/surface-v2.json'));
+  const input=crypto.createHash('sha256');for(const file of surface.inputs)input.update(fs.readFileSync(file));
+  assert.equal(input.digest('hex'),surface.input_sha256,'rebake when surface inputs change');
+  for(const [file,meta]of Object.entries(surface.assets))assert.equal(crypto.createHash('sha256').update(fs.readFileSync(file)).digest('hex'),meta.sha256);
+  assert.match(fs.readFileSync('scripts/bake_surface.cjs','utf8'),/clip-path="url\(#clip\)"/);
+  assert.equal((html.match(/data:image\/webp;base64,/g)||[]).length,3,'one world, one town and one atlas, reused rather than duplicated');
+  assert.notDeepEqual(D.crops.kho,D.crops.town,'Khoo Kongsi has its own architectural illustration');
+});
+test('camera flight has exact endpoints, finite bounded zoom and continuous centres',()=>{
+  const a={scale:1,x:0,y:0},b={scale:12,x:-4600,y:-3200};
+  for(const t of [0,.01,.25,.5,.9,1]){
+    const c=C.cameraBetween(a,b,t);assert(c.scale>=1&&c.scale<=12);
+    assert(Object.values(c).every(Number.isFinite));
+    const center=(550-c.x)/c.scale;
+    assert(Math.abs(center-((550-a.x)/a.scale+((550-b.x)/b.scale-(550-a.x)/a.scale)*t))<1e-9);
+  }
+  for(const key of ['scale','x','y']){assert(Math.abs(C.cameraBetween(a,b,0)[key]-a[key])<1e-9);assert(Math.abs(C.cameraBetween(a,b,1)[key]-b[key])<1e-9);}
+});
+test('dense bridge detail sampling respects concave approach footprints',()=>{
+  for(const id of ['bridge-1','bridge-2'])for(const count of [24,40,80,160]){
+    const p=D.bridgeSpine(features[id].geometry,count);assert(p.length>=count-2);
+    for(const point of p)assert(C.pointInGeometry(point,features[id].geometry));
+  }
+});

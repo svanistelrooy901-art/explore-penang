@@ -1,0 +1,26 @@
+{
+  "description": "Static artwork clipped to exact approved land geometry; no measured elevation, land use or street layout.",
+  "inputs": [
+    "scripts/bake_surface.cjs",
+    "data/geography.geojson",
+    "review/assets/landscape-v2.webp",
+    "review/assets/georgetown-material-v2.webp"
+  ],
+  "input_sha256": "602207ec4c0a4d0bf5785675d791830c04ec9f7fda7e67fd6f098137dcd92bf1",
+  "town": {
+    "x": 390,
+    "y": 266,
+    "width": 150,
+    "height": 118
+  },
+  "assets": {
+    "review/assets/world-surface-v2.webp": {
+      "bytes": 261890,
+      "sha256": "dbb96e85d64ffa99e4991521de6972bfcfe9254d41faa63a54088076b26a7dbc"
+    },
+    "review/assets/georgetown-surface-v2.webp": {
+      "bytes": 168354,
+      "sha256": "bdc33e142b37de22cead6617c5638319752b335d0dff3ee8a9c40e26f3e8127d"
+    }
+  }
+}

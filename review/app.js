@@ -2,9 +2,13 @@
   'use strict';
   const C = PenangMap, R = PenangRenderer;
   const data = JSON.parse(document.getElementById('review-data').textContent);
+  // Reuse the initial SVG's embedded assets rather than duplicating base64 in JSON.
+  data.atlas=document.getElementById('diorama-atlas')?.getAttribute('href')||'';
+  data.surface=document.getElementById('world-surface')?.getAttribute('href')||'';
+  data.town=document.getElementById('georgetown-surface')?.getAttribute('href')||'';
   let thumbnailId=0;
   function artThumbnail(id){
-    const key=id==='kho'?'town':id,r=PenangDiorama.crops[key].map(v=>v*1152),box=r.join(' '),clip='thumbnail-'+(++thumbnailId);
+    const key=id,r=PenangDiorama.crops[key].map(v=>v*1152),box=r.join(' '),clip='thumbnail-'+(++thumbnailId);
     return `<svg class="art-thumbnail" viewBox="${box}" overflow="hidden" aria-hidden="true"><defs><clipPath id="${clip}"><rect x="${r[0]}" y="${r[1]}" width="${r[2]}" height="${r[3]}"/></clipPath></defs><image clip-path="url(#${clip})" width="1152" height="1152" href="${data.atlas}"/></svg>`;
   }
   document.querySelectorAll('[data-place]').forEach(card=>card.insertAdjacentHTML('afterbegin',artThumbnail(card.dataset.place)));
@@ -22,7 +26,8 @@
   let storage; try { storage = window.localStorage; } catch { storage = { getItem() { return null; }, setItem() {} }; }
   const discovered = C.readProgress(storage, ids);
   let mode = 'illustrated', category = 'All', selected = null, camera = { scale: 1, x: 0, y: 0 }, toastTimer;
-  let pinSignature='',frame=0;
+  let pinSignature='',pinScale=0,paintScale=0,paintUnit=0,paintSelected,frame=0,flight=0;
+  const reducedMotion=matchMedia('(prefers-reduced-motion: reduce)');
   const worldCache=new Map();
   const pointers = new Map(); let gesture = null, dragged = false;
   function toast(message) {
@@ -40,6 +45,7 @@
     el('filters').innerHTML = ['All', 'Heritage', 'Nature', 'Culture', 'Food', 'Local'].map(cat => `<button data-cat="${cat}" aria-pressed="${cat === category}">${cat}</button>`).join('');
     el('filters').querySelectorAll('button').forEach(button => button.onclick = () => {
       category = button.dataset.cat; categories(); cards(); pins();
+      el('filters').querySelector(`[data-cat="${category}"]`)?.focus({preventScroll:true});
     });
   }
   function cards() {
@@ -67,16 +73,40 @@
     camera.x = C.clamp(camera.x, 1100 - 1100 * camera.scale - pad, pad);
     camera.y = C.clamp(camera.y, 880 - 880 * camera.scale - pad, pad);
     el('camera').setAttribute('transform', `translate(${camera.x} ${camera.y}) scale(${camera.scale})`);
+    const unit=1/Math.max(.1,svg.getScreenCTM()?.a||1);
+    if(paintScale!==camera.scale||paintUnit!==unit){
+      paintScale=camera.scale;paintUnit=unit;
     el('mapFrame').classList.toggle('zoom-detail',camera.scale>3);
     svg.querySelectorAll('.landmark-art').forEach(node=>{
-      node.setAttribute('transform',`translate(${node.dataset.artX} ${node.dataset.artY}) scale(${1/Math.max(1,camera.scale/1.3)})`);
-      node.dataset.selected=node.dataset.art===selected;
+      node.setAttribute('transform',`translate(${node.dataset.artX} ${node.dataset.artY}) scale(${1/Math.max(1,camera.scale/2.1)})`);
     });
+    svg.querySelectorAll('.sea-decoration').forEach(node=>node.setAttribute('transform',`translate(${node.dataset.artX} ${node.dataset.artY}) scale(${1/Math.max(1,camera.scale/1.2)})`));
+    for(const id of ['water','glitter'])svg.querySelector('#'+id)?.setAttribute('patternTransform',`scale(${1/Math.max(1,camera.scale/1.4)})`);
+    svg.querySelectorAll('#map-labels text').forEach(node=>{
+      const x=node.getAttribute('x'),y=node.getAttribute('y');
+      const dy=svg.clientWidth<600&&node.classList.contains('primary-crossing')?12:0;
+      node.setAttribute('transform',`translate(${x} ${y}) scale(${unit/camera.scale}) translate(${-x} ${-y+dy})`);
+    });
+    el('mapFrame').classList.toggle('zoom-quarter',camera.scale>=4);
     el('zoomIn').disabled = camera.scale >= 14;
     el('zoomOut').disabled = camera.scale <= .85;
+    }
+    if(paintSelected!==selected){paintSelected=selected;svg.querySelectorAll('.landmark-art').forEach(node=>{node.dataset.selected=node.dataset.art===selected;});}
     pins();
     // Scale bar is meaningful only at the default overview; compass remains fixed.
     const scale = svg.querySelector('[data-scale]'); if (scale) scale.style.display = camera.scale === 1 ? '' : 'none';
+  }
+  function stopFlight(){if(flight){cancelAnimationFrame(flight);flight=0;}svg.dataset.cameraMoving='false';}
+  function moveCamera(next,animate=true){
+    stopFlight();
+    if(!animate||reducedMotion.matches){camera=next;applyCamera();return;}
+    const from={...camera},start=performance.now();svg.dataset.cameraMoving='true';
+    function tick(now){
+      const t=Math.min(1,(now-start)/420),ease=1-Math.pow(1-t,3);
+      camera=C.cameraBetween(from,next,ease);applyCamera();
+      if(t<1)flight=requestAnimationFrame(tick);else{flight=0;svg.dataset.cameraMoving='false';}
+    }
+    flight=requestAnimationFrame(tick);
   }
   function requestCamera(){if(!frame)frame=requestAnimationFrame(()=>{frame=0;applyCamera();});}
   function pins() {
@@ -86,11 +116,12 @@
     const unit=1/Math.max(.1,svg.getScreenCTM()?.a||1);
     const signature=[mode,category,clustered,groupHills,selected,[...discovered].join(','),Math.round(unit*100)].join('|');
     if(signature===pinSignature){
+      if(pinScale===unit/k)return;pinScale=unit/k;
       el('pins').querySelectorAll('.pin').forEach(pin=>pin.setAttribute('transform',`translate(${pin.dataset.x} ${pin.dataset.y}) scale(${unit/k})`));
       return;
     }
     const focused=document.activeElement?.closest?.('.pin')?.dataset.id;
-    pinSignature=signature;
+    pinSignature=signature;pinScale=unit/k;
     let visible = places.filter(p => category === 'All' || p.cat === category);
     const grouped = visible.filter(p => quarter.includes(p.id));
     if (clustered) visible = visible.filter(p => !quarter.includes(p.id));
@@ -98,17 +129,18 @@
     const render = (id, coords, number, label, cluster = false) => {
       const [x,y] = C.viewPoint(coords, mode);
       const mobile=compact;
-      const showLabel=!mobile||(cluster&&id!=='central')||selected===id;
+      const showLabel=!mobile||k>=4||(cluster&&id!=='central')||selected===id;
       const width=Math.max(68,label.length*5.9+20);
-      const labelX=!mobile&&id==='hill'?-68:0,labelY=!mobile&&id==='hill'?-12:24;
+      const offsets={hill:[-62,-8],kek:[61,20],fort:[0,-49],kho:[-38,26],food:[-58,-39],jetty:[46,26]};
+      const [labelX,labelY]=offsets[id]||[0,26];
       const aria=id==='central'?'Explore Penang Hill and Kek Lok Si':cluster?'Zoom to '+grouped.length+' George Town destinations':'Discover '+label;
-      return `<g class="pin" role="button" tabindex="0" aria-label="${C.escape(aria)}" data-id="${id}" data-x="${x}" data-y="${y}" data-active="${selected === id}" data-discovered="${discovered.has(id)}" transform="translate(${x} ${y}) scale(${unit/k})"><circle r="20"/><text>${C.escape(number)}</text>${showLabel?`<rect class="label-bg" x="${labelX-width/2}" y="${labelY}" width="${width}" height="25" rx="12"/><text class="pin-label" x="${labelX}" y="${labelY+17}">${C.escape(label)}</text>`:''}</g>`;
+      return `<g class="pin" role="button" tabindex="0" aria-label="${C.escape(aria)}" data-id="${id}" data-x="${x}" data-y="${y}" data-active="${selected === id}" data-discovered="${discovered.has(id)}" transform="translate(${x} ${y}) scale(${unit/k})">${showLabel?`<rect class="pin-hit-box" x="${Math.min(-22,labelX-width/2)}" y="${Math.min(-22,labelY)}" width="${Math.max(22,labelX+width/2)-Math.min(-22,labelX-width/2)}" height="${Math.max(22,labelY+25)-Math.min(-22,labelY)}"/>`:""}<circle r="22" class="pin-hit"/><circle r="15" class="pin-dot"/><text>${C.escape(number)}</text>${showLabel?`<rect class="label-bg" x="${labelX-width/2}" y="${labelY}" width="${width}" height="25" rx="12"/><text class="pin-label" x="${labelX}" y="${labelY+17}">${C.escape(label)}</text>`:''}</g>`;
     };
     el('pins').innerHTML = visible.map(p => render(p.id,p.coordinates,p.number,p.name.replace('Clan Jetties · ', '').replace('Food trail · ', ''))).join('') +
       (clustered && grouped.length ? render('georgetown', [100.339,5.417], '✦', compact?'George Town':'George Town · '+grouped.length+' places', true) : '')+
       (groupHills?render('central',hillsCenter(),'2','Hills & temples',true):'');
     el('pins').querySelectorAll('.pin').forEach(pin => {
-      const act = () => pin.dataset.id === 'georgetown' ? focusQuarter() : pin.dataset.id==='central'?focusAt(hillsCenter(),4.5):choose(pin.dataset.id, false);
+      const act = () => pin.dataset.id === 'georgetown' ? focusQuarter() : pin.dataset.id==='central'?focusAt(hillsCenter(),4.5):choose(pin.dataset.id, true);
       pin.addEventListener('click', () => { if (!dragged) act(); });
       pin.addEventListener('keydown', event => { if (event.key === 'Enter' || event.key === ' ') {event.preventDefault(); act();} });
     });
@@ -118,7 +150,7 @@
     const title = mode === 'reference' ? 'Penang north-up geographic reference map' : 'Penang illustrated depth study, based on the same OSM geometry';
     if(!worldCache.has(mode))worldCache.set(mode,R.renderWorld(data,mode));
     svg.innerHTML = `<title id="map-title">${title}</title><desc id="map-description">Two road bridges, separate ferry routes and eight representative destination coordinates. Terrain and buildings are decorative. Drag or pinch to explore, double-click to zoom. Arrow keys pan, plus and minus zoom, Home resets.</desc>` + worldCache.get(mode);
-    pinSignature='';
+    pinSignature='';paintScale=0;paintSelected=undefined;
     el('mapStatus').textContent = mode === 'reference' ? 'NORTH-UP · APPROVED GEOGRAPHY' : 'DIORAMA · APPROVED GEOGRAPHY';
     el('reference').setAttribute('aria-pressed', mode === 'reference');
     el('illustrated').setAttribute('aria-pressed', mode === 'illustrated');
@@ -126,7 +158,7 @@
   }
   function focusAt(coordinate, scale) {
     const [x,y] = C.viewPoint(coordinate,mode);
-    camera = {scale,x:550-x*scale,y:440-y*scale}; applyCamera();
+    moveCamera({scale,x:550-x*scale,y:440-y*scale});
   }
   function focusQuarter() { focusAt([100.3375,5.416], 12); toast('George Town close-up — select a numbered place.'); }
   function hillsCenter(){const p=places.filter(p=>p.id==='hill'||p.id==='kek');return [(p[0].coordinates[0]+p[1].coordinates[0])/2,(p[0].coordinates[1]+p[1].coordinates[1])/2];}
@@ -141,7 +173,7 @@
     const query = encodeURIComponent(`${p.coordinates[1]},${p.coordinates[0]}`);
     el('detail').classList.add('is-selected');
     el('detail').innerHTML = `<button class="dismiss-detail" id="closeDetail" aria-label="Close attraction profile">×</button><div class="detail-art" role="img" aria-label="Decorative illustration of ${C.escape(p.name)}">${artThumbnail(id)}</div><span class="eyebrow">${C.escape(p.cat)} · PLACE ${p.number}</span><h3>${C.escape(p.name)}</h3><p>${C.escape(p.description)}</p><div class="actions"><a target="_blank" rel="noopener noreferrer" href="${C.escape(p.official_url)}">${C.escape(p.official_label)} ↗</a><a class="secondary" target="_blank" rel="noopener noreferrer" href="https://www.google.com/maps/search/?api=1&query=${query}">View mapped point ↗</a><button id="sharePlace">Share ↗</button></div><p class="coordinate-note">${C.escape(p.coordinate_note)}. Confirm the correct visitor entrance with the venue.</p>`;
-    el('closeDetail').onclick=()=>el('detail').classList.remove('is-selected');
+    el('closeDetail').onclick=()=>{el('detail').classList.remove('is-selected');svg.focus({preventScroll:true});};
     el('sharePlace').onclick = () => share(`${location.href.split('#')[0]}#${encodeURIComponent(p.id)}`);
     try { history.replaceState(null,'','#' + encodeURIComponent(p.id)); } catch { /* file preview still works */ }
     if (first) toast(heritage.every(id => discovered.has(id)) && heritage.includes(id) ? '✦ Heritage Hunter stamp unlocked!' : '✦ Discovered: ' + p.name);
@@ -155,27 +187,27 @@
   }
   for (const id of ['reference','illustrated']) el(id).onclick = () => {
     if (mode === id) return;
-    camera=C.reframe(camera,mode,id);mode=id;redraw();
+    stopFlight();camera=C.reframe(camera,mode,id);mode=id;redraw();
   };
   el('share').onclick = () => share(location.href);
   el('georgetown').onclick = focusQuarter;
-  el('island').onclick=()=>{const g=data.geography.features.find(f=>f.id==='penang-island').geometry;camera=C.fitPoints(g.coordinates.flat(2),mode,100);applyCamera();};
-  el('crossings').onclick=()=>{const points=data.geography.features.filter(f=>f.id==='bridge-1'||f.id==='bridge-2').flatMap(f=>f.geometry.coordinates.flat());camera=C.fitPoints(points,mode,170);applyCamera();};
-  const motionPreference=matchMedia('(prefers-reduced-motion: reduce)');
+  el('island').onclick=()=>{const g=data.geography.features.find(f=>f.id==='penang-island').geometry;moveCamera(C.fitPoints(g.coordinates.flat(2),mode,100));};
+  el('crossings').onclick=()=>{const points=data.geography.features.filter(f=>f.id==='bridge-1'||f.id==='bridge-2').flatMap(f=>f.geometry.coordinates.flat());moveCamera(C.fitPoints(points,mode,170));};
+  const motionPreference=reducedMotion;
   let motion=!motionPreference.matches;
   function setMotion(){el('mapFrame').classList.toggle('motion-on',motion);el('motion').setAttribute('aria-pressed',motion);el('motion').textContent=motion?'Motion on':'Motion off';}
   el('motion').onclick=()=>{motion=!motion;setMotion();};
-  motionPreference.addEventListener('change',event=>{if(event.matches)motion=false;setMotion();});setMotion();
-  el('questButton').onclick = () => { category = 'Heritage'; categories(); cards(); focusQuarter(); el('map-section').scrollIntoView({block:'start',behavior:'smooth'}); };
-  el('zoomIn').onclick = () => { camera = C.zoomAt(camera,[550,440],1.35); applyCamera(); };
-  el('zoomOut').onclick = () => { camera = C.zoomAt(camera,[550,440],1/1.35); applyCamera(); };
-  el('reset').onclick = () => {camera={scale:1,x:0,y:0}; applyCamera();};
+  motionPreference.addEventListener('change',event=>{if(event.matches){motion=false;stopFlight();}setMotion();});setMotion();
+  el('questButton').onclick = () => { category = 'Heritage'; categories(); cards(); focusQuarter(); el('map-section').scrollIntoView({block:'start',behavior:reducedMotion.matches?'instant':'smooth'}); };
+  el('zoomIn').onclick = () => { moveCamera(C.zoomAt(camera,[550,440],1.35)); };
+  el('zoomOut').onclick = () => { moveCamera(C.zoomAt(camera,[550,440],1/1.35)); };
+  el('reset').onclick = () => {moveCamera({scale:1,x:0,y:0});};
   el('placeList').querySelectorAll('button').forEach(card => card.onclick = () => {choose(card.dataset.place); el('journal').focus({preventScroll:true});});
-  svg.addEventListener('wheel', event => { event.preventDefault(); camera=C.zoomAt(camera,point(event),event.deltaY<0?1.12:1/1.12);requestCamera(); },{passive:false});
-  svg.addEventListener('dblclick',event=>{if(event.target.closest('.pin'))return;event.preventDefault();camera=C.zoomAt(camera,point(event),2);applyCamera();});
+  svg.addEventListener('wheel', event => { event.preventDefault(); stopFlight();camera=C.zoomAt(camera,point(event),event.deltaY<0?1.12:1/1.12);requestCamera(); },{passive:false});
+  svg.addEventListener('dblclick',event=>{if(event.target.closest('.pin'))return;event.preventDefault();moveCamera(C.zoomAt(camera,point(event),2));});
   svg.addEventListener('keydown',event=>{
     const steps={ArrowLeft:[60,0],ArrowRight:[-60,0],ArrowUp:[0,60],ArrowDown:[0,-60]};
-    if(steps[event.key]){event.preventDefault();camera.x+=steps[event.key][0];camera.y+=steps[event.key][1];applyCamera();}
+    if(steps[event.key]){event.preventDefault();stopFlight();camera.x+=steps[event.key][0];camera.y+=steps[event.key][1];applyCamera();}
     else if(event.key==='+'||event.key==='='){event.preventDefault();el('zoomIn').click();}
     else if(event.key==='-'){event.preventDefault();el('zoomOut').click();}
     else if(event.key==='Home'){event.preventDefault();el('reset').click();}
@@ -188,7 +220,7 @@
     else if (values.length > 1) gesture={camera:{...camera},mid:[(values[0][0]+values[1][0])/2,(values[0][1]+values[1][1])/2],distance:Math.hypot(values[0][0]-values[1][0],values[0][1]-values[1][1])};
     else gesture=null;
   }
-  svg.addEventListener('pointerdown', event => { dragged=false;pointers.set(event.pointerId,point(event));if(!event.target.closest('.pin')||pointers.size>1)svg.setPointerCapture(event.pointerId);beginGesture(); });
+  svg.addEventListener('pointerdown', event => { stopFlight();dragged=false;pointers.set(event.pointerId,point(event));if(!event.target.closest('.pin')||pointers.size>1)svg.setPointerCapture(event.pointerId);beginGesture(); });
   svg.addEventListener('pointermove', event => {
     if(!pointers.has(event.pointerId)||!gesture)return;
     pointers.set(event.pointerId,point(event));const values=[...pointers.values()];
@@ -202,6 +234,7 @@
   function end(event){if(frame){cancelAnimationFrame(frame);frame=0;applyCamera();}pointers.delete(event.pointerId);if(svg.hasPointerCapture(event.pointerId))svg.releasePointerCapture(event.pointerId);beginGesture();}
   svg.addEventListener('pointerup',end);svg.addEventListener('pointercancel',end);svg.addEventListener('lostpointercapture',event=>{pointers.delete(event.pointerId);beginGesture();});
   window.addEventListener('hashchange',()=>{const id=C.readHash(location.hash,ids);if(id)choose(id);});
+  document.addEventListener('keydown',event=>{if(event.key==='Escape'&&el('detail').classList.contains('is-selected')){el('detail').classList.remove('is-selected');svg.focus({preventScroll:true});}});
   categories();cards();progress();redraw();
   const hash=C.readHash(location.hash,ids);if(hash)choose(hash);
 })();
