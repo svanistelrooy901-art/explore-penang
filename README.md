@@ -1,4 +1,33 @@
-# Explore Penang — P01 interactive prototype
+# Explore Penang
+
+## P02.2 geography review — 15 October 2026
+
+Mamu approved the geographic draft on **16 October 2026**, against commit `18aa684`. The approved source files are fingerprinted in [geography-approval.json](docs/geography-approval.json) and checked by tests. Illustration work continues on `review/p02-geography`. Open **[review.html](review.html)** directly in a browser; it works offline and includes its source data.
+
+- North-up map assembled from real OSM coastline and state-boundary member ways.
+- Both road bridges and separate George Town–Butterworth ferry routes.
+- An illustrated depth study using the identical geometry.
+- Eight source-linked representative points, official visitor links, filters, a George Town close-up, discovery progress and Heritage Hunter quest.
+- Pointer drag, wheel/button zoom, touch pinch, keyboard selection, deep links and safe recovery from unavailable/corrupt storage.
+- No runtime mapping API, third-party script, analytics or tile request.
+
+The live `index.html` remains the earlier schematic prototype. P02.3 now defaults to a textured diorama: generated architectural/forest sprites, layered land edges, shallow-water light, bridge decks/piers/towers derived from the approved footprints, and optional water/ferry motion. Island/bridge focus presets, keyboard navigation, presentation switching that preserves camera position, mobile clusters and a compact attraction sheet improve exploration. The richer illustrated-world treatment is still in progress; architecture and terrain are artistic interpretations. Evidence and publication status: [P02-GEOGRAPHY-REVIEW.md](docs/P02-GEOGRAPHY-REVIEW.md). Asset origin and prompt: [artwork notes](review/assets/README.md).
+
+The offline review including its embedded 455 KB atlas remains below 2 MB. It makes no third-party requests. Pin DOM is reused while panning, pointer rendering is limited to animation frames, and each presentation is cached. Reduced-motion preference is respected and motion can be disabled explicitly.
+
+### Develop and verify
+
+```sh
+npm ci --ignore-scripts
+npm run build:review
+npm test
+npx playwright install chromium
+npm run test:browser
+```
+
+The build is deterministic from committed data. `review.html` and both `docs/geography-*.svg` files are generated. Edit `review/`, then rebuild. To deliberately refresh data, run `python3 scripts/fetch_sources.py` then `python3 scripts/build_geography.py`; read [data notes](data/README.md) first. Changed geography requires a new review.
+
+## Existing live P01 / early P02 prototype
 
 Open `index.html` in a modern browser. No dependencies, API keys or build process required.
 

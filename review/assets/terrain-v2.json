@@ -1,0 +1,9 @@
+{
+  "description": "Decorative relief, vegetation and settlement texture. No measured elevation or land use.",
+  "width": 2200,
+  "height": 1760,
+  "source_sha256": "348301d060650ccf16b60a4389bad96952fccc2d89086ad9b03683d1c6340e26",
+  "asset_sha256": "b0d625105d2540f32922d1b9012090a9264a5b3c1d55b2598ddf21f25e867139",
+  "material_asset": "landscape-v2.webp",
+  "material_sha256": "cbd8447d5620744ec8016d37909be0c12268334129e47adde20edc1f7f93f5fd"
+}
