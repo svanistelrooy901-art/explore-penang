@@ -326,7 +326,7 @@
   let storage; try { storage = window.localStorage; } catch { storage = { getItem() { return null; }, setItem() {} }; }
   const discovered = C.readProgress(storage, ids);
   let mode = 'illustrated', category = 'All', selected = null, camera = { scale: 1, x: 0, y: 0 }, toastTimer;
-  let pinSignature='',pinScale=0,paintScale=0,paintUnit=0,paintSelected,frame=0,flight=0;
+  let pinSignature='',pinScale=0,paintScale=0,paintUnit=0,paintCompact,paintSelected,frame=0,flight=0;
   const reducedMotion=matchMedia('(prefers-reduced-motion: reduce)');
   const worldCache=new Map();
   const pointers = new Map(); let gesture = null, dragged = false;
@@ -374,18 +374,19 @@
     camera.y = C.clamp(camera.y, 880 - 880 * camera.scale - pad, pad);
     el('camera').setAttribute('transform', `translate(${camera.x} ${camera.y}) scale(${camera.scale})`);
     const unit=1/Math.max(.1,svg.getScreenCTM()?.a||1);
-    if(paintScale!==camera.scale||paintUnit!==unit||paintSelected!==selected){
-      paintScale=camera.scale;paintUnit=unit;
+    const compact=svg.clientWidth<600;
+    if(paintScale!==camera.scale||paintUnit!==unit||paintCompact!==compact||paintSelected!==selected){
+      paintScale=camera.scale;paintUnit=unit;paintCompact=compact;
     el('mapFrame').classList.toggle('zoom-detail',camera.scale>3);
     svg.querySelectorAll('.landmark-art').forEach(node=>{
-      const limit=svg.clientWidth<600&&camera.scale>=4&&node.dataset.art===selected?1.65*unit:2.1;
+      const limit=compact&&camera.scale>=4&&node.dataset.art===selected?1.65*unit:2.1;
       node.setAttribute('transform',`translate(${node.dataset.artX} ${node.dataset.artY}) scale(${1/Math.max(1,camera.scale/limit)})`);
     });
     svg.querySelectorAll('.sea-decoration').forEach(node=>node.setAttribute('transform',`translate(${node.dataset.artX} ${node.dataset.artY}) scale(${1/Math.max(1,camera.scale/1.2)})`));
     for(const id of ['water','glitter'])svg.querySelector('#'+id)?.setAttribute('patternTransform',`scale(${1/Math.max(1,camera.scale/1.4)})`);
     svg.querySelectorAll('#map-labels text').forEach(node=>{
       const x=node.getAttribute('x'),y=node.getAttribute('y');
-      const dy=svg.clientWidth<600&&node.classList.contains('primary-crossing')?12:0;
+      const dy=compact&&node.classList.contains('primary-crossing')?12:0;
       node.setAttribute('transform',`translate(${x} ${y}) scale(${unit/camera.scale}) translate(${-x} ${-y+dy})`);
     });
     el('mapFrame').classList.toggle('zoom-quarter',camera.scale>=4);
@@ -415,7 +416,7 @@
     const compact=svg.getBoundingClientRect().width<600;
     const groupHills=compact&&k<2.8&&category==='All';
     const unit=1/Math.max(.1,svg.getScreenCTM()?.a||1);
-    const signature=[mode,category,clustered,groupHills,selected,[...discovered].join(','),Math.round(unit*100)].join('|');
+    const signature=[mode,category,compact,clustered,groupHills,selected,[...discovered].join(','),Math.round(unit*100)].join('|');
     if(signature===pinSignature){
       if(pinScale===unit/k)return;pinScale=unit/k;
       el('pins').querySelectorAll('.pin').forEach(pin=>pin.setAttribute('transform',`translate(${pin.dataset.x} ${pin.dataset.y}) scale(${unit/k})`));
@@ -517,7 +518,9 @@
     else if(event.key==='Home'){event.preventDefault();el('reset').click();}
     else if(event.key==='Escape')el('detail').classList.remove('is-selected');
   });
-  new ResizeObserver(()=>{pinSignature='';requestCamera();}).observe(svg);
+  // Initial/redundant observer notifications must not rebuild unchanged pins.
+  // Actual size and compact-layout changes are handled by the render signatures.
+  new ResizeObserver(requestCamera).observe(svg);
   function beginGesture() {
     const values = [...pointers.values()];
     if (values.length === 1) gesture={camera:{...camera},point:values[0]};

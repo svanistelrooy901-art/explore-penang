@@ -61,6 +61,21 @@ test('George Town material remains visible and anchored through zoom and reset',
   }
   assert.deepEqual(errors,[]);await context.close();
 });
+test('resizing updates compact labels even when the map projection scale is unchanged',async()=>{
+  const {page,context,errors}=await setup();
+  await page.getByRole('button',{name:'Nature',exact:true}).click();
+  const map=page.locator('#map');
+  // A letterboxed SVG can cross the compact threshold without changing its CTM.
+  await map.evaluate(e=>{e.style.width='660px';e.style.height='350px';});
+  await page.waitForFunction(()=>document.querySelectorAll('.pin .pin-label').length===2);
+  const unit=await map.evaluate(e=>e.getScreenCTM().a);
+  await map.evaluate(e=>{e.style.width='560px';});
+  await page.waitForFunction(()=>document.querySelectorAll('.pin .pin-label').length===0);
+  assert.equal(await map.evaluate(e=>e.getScreenCTM().a),unit);
+  await map.evaluate(e=>{e.style.width='660px';});
+  await page.waitForFunction(()=>document.querySelectorAll('.pin .pin-label').length===2);
+  assert.deepEqual(errors,[]);await context.close();
+});
 test('mobile: no horizontal overflow; filters, zoom, reset and drag preserve crossings',async()=>{
   const {page,context,errors}=await setup({viewport:{width:390,height:844},hasTouch:true,isMobile:true});
   assert(await page.evaluate(()=>document.documentElement.scrollWidth<=document.documentElement.clientWidth+1));
