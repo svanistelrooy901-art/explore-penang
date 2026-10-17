@@ -50,6 +50,17 @@ test('desktop: both map modes, close-up, discovery, quest and real official link
   await page.reload();assert.equal(await page.locator('#progressText').innerText(),'3 / 8');
   assert.deepEqual(errors,[]);await context.close();
 });
+test('George Town material remains visible and anchored through zoom and reset',async()=>{
+  const {page,context,errors}=await setup({viewport:{width:390,height:844},hasTouch:true,isMobile:true});
+  const tile=page.locator('#georgetown-surface');
+  const initial=await tile.evaluate(e=>({x:e.getAttribute('x'),y:e.getAttribute('y'),width:e.getAttribute('width'),height:e.getAttribute('height'),href:e.getAttribute('href')}));
+  for(const action of [null,'#georgetown','#reset']){
+    if(action)await page.locator(action).click();
+    assert.equal(await tile.evaluate(e=>getComputedStyle(e).opacity),'1','the district must not pop in at a zoom threshold');
+    assert.deepEqual(await tile.evaluate(e=>({x:e.getAttribute('x'),y:e.getAttribute('y'),width:e.getAttribute('width'),height:e.getAttribute('height'),href:e.getAttribute('href')})),initial,'zoom changes the camera, not the urban material or its bounds');
+  }
+  assert.deepEqual(errors,[]);await context.close();
+});
 test('mobile: no horizontal overflow; filters, zoom, reset and drag preserve crossings',async()=>{
   const {page,context,errors}=await setup({viewport:{width:390,height:844},hasTouch:true,isMobile:true});
   assert(await page.evaluate(()=>document.documentElement.scrollWidth<=document.documentElement.clientWidth+1));

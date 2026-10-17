@@ -118,6 +118,7 @@ test('continuous terrain bake matches its source and stays outside geographic da
   assert.equal(manifest.width,2200);assert.equal(manifest.height,1760);
   const html=fs.readFileSync('review.html','utf8');
   const surface=JSON.parse(fs.readFileSync('review/assets/surface-v2.json'));
+  assert.deepEqual(surface.town,D.townExtent,'district bake and renderer must use the same material bounds');
   const input=crypto.createHash('sha256');for(const file of surface.inputs)input.update(fs.readFileSync(file));
   assert.equal(input.digest('hex'),surface.input_sha256,'rebake when surface inputs change');
   for(const [file,meta]of Object.entries(surface.assets))assert.equal(crypto.createHash('sha256').update(fs.readFileSync(file)).digest('hex'),meta.sha256);

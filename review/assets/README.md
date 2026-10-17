@@ -110,3 +110,25 @@ Asset type: one transparent production ferry sprite for the existing Explore Pen
 Input image is the owner-approved style benchmark only. Create ONE beautifully detailed small Penang-inspired harbour passenger ferry as a photographic miniature model. White hull and superstructure, rich blue hull band, warm yellow-gold deck accents, two passenger levels, small wheelhouse, visible windows, slender deck railings, rescue rings and a few tiny seated passengers. Same elevated 45-degree aerial viewpoint and warm upper-left sunlight as the miniature world. Bow points toward lower left; stern toward upper right. Complete ferry visible with generous transparent padding. Realistic miniature materials and soft local contact shadow, no exaggerated cartoon shape. This is an illustrative ferry, not a precise real-vessel model.
 Genuine alpha transparency surrounding the whole ferry; no water, no wake, no island, no square base, no sky, no UI, no words, no logos, no text or watermark. Detailed silhouette readable at 60px. Compact isolated composition on a square canvas.
 ```
+
+
+## P02.4 continuous George Town detail — 17 October 2026
+
+`georgetown-material-v3.webp` is a new 1402 × 1122 built-in ImageGen district material, technically encoded as WebP at quality 86. It has smaller, denser shophouse blocks, connected alleys and softer transitions into tropical neighbourhoods. The v2 material and owner-approved concept were style references; neither was traced into the geographic data. Streets and buildings are interpretive, not surveyed.
+
+The surface bake now uses one shared ground composition at world and district resolutions. The 1500 × 1180 detail tile replaces land pixels over the same fixed material bounds and remains visible at every zoom, so town fabric no longer pops in at the detail threshold. The world bake contains the same urban fabric. Narrower coastal light, a fine broken foam edge and a shallower shaded bevel reduce the broad halo at close range. Shallow-water effects stay out of the detail tile to avoid doubling them. No new live SVG layers, filters or animations were added.
+
+The material bounds are exported by `review/diorama.js` and consumed by the bake and renderer. Both the renderer and projection code are hashed as bake inputs. Approved coastlines, coordinates, bridge/ferry data and approval fingerprints are unchanged.
+
+### District material generation prompt
+
+```text
+Use case: stylized-concept.
+Asset type: production George Town district ground material for the EXISTING Explore Penang miniature world.
+Input image 1 (georgetown-material-v2.webp): reference for building materials and warm light, NOT a composition to preserve.
+Input image 2 (owner's approved Wander and Discover concept): style benchmark only. Do not reproduce UI, text, geography, sea, bridges or landmarks.
+Primary request: create a wider, much denser miniature heritage district, at a 45-degree overhead oblique viewpoint consistent with the references. Tiny tightly packed two-storey Penang shophouses with red weathered clay-tile roofs, pastel cream/mint/ochre facades, five-foot-way arcades, slender windows, narrow streets, alley courtyards, occasional trees and coconut palms. MANY SMALL BUILDINGS: show roughly 30 narrow house frontages across the entire width and 18 rows in depth, rather than oversized individual buildings. Small roofs remain crisp, straight, detailed and varied. A few open courtyards and one small green square, continuous plausible urban fabric.
+Composition: opaque rectangular landscape material, 5:4 ratio, filling ALL edges. No horizon. Fine urban blocks dominate the centre and lower right, gradually blending into leafy lower-density tropical neighbourhoods on the left and top edges. Similar warm yellow-green vegetation to the larger terrain; avoid a dark forest border or vignette.
+Lighting: warm sun from upper left, consistent short directional shadows and small ambient-occlusion gaps between houses; photographic miniature model materials, attractive and detailed, not a cartoon. Crisp 2048x1632-style detail with no photographic tilt-shift blur. Moderate natural colour, avoid oversaturated orange roofs.
+Constraints: this is interpretive decorative urban ground, NOT a surveyed street map. NO ocean, water, coastline, seawall, island silhouette, raised plinth, floating cutout, large signature landmark, pagoda, giant temple, tall buildings, UI, words, signs, labels, logos, borders or watermark. No transparency. Do not duplicate a repeating tile or regular checkerboard; use irregular connected street blocks and varied roof geometry. Maintain the existing product's visual direction.
+```

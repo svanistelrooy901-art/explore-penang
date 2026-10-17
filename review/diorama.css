@@ -23,5 +23,6 @@
 @media(max-width:600px){.map-frame .geo-label.regional,.map-frame .geo-label.water-label{display:none}.map-frame .geo-label.crossing-label{font-size:8px}.map-frame .pin-dot{r:17px}.intro h1{font-family:Georgia,'Times New Roman',serif}.map-controls button,.focus-bar button{min-height:44px}.focus-bar{padding-top:8px}.map-toolbar>button{min-height:44px}.map-frame{height:355px}.map-status{max-width:210px}.crossing-legend span:last-child{font-size:8px}.destination-detail.is-selected{max-height:55dvh}}
 @media(max-width:360px){.view-toggle button{padding:10px 6px;font-size:8px}.map-toolbar>button{width:94px;font-size:8px}.map-toolbar{gap:1px}.map-status{font-size:6px}.focus-bar button{padding:8px;font-size:8px}}
 .map-frame.zoom-detail .coastal-halo{opacity:.12}
-#georgetown-surface{opacity:0;pointer-events:none}.map-frame.zoom-detail #georgetown-surface{opacity:1}.map-frame #world-surface{pointer-events:none}
+/* The same urban composition stays visible through zoom; detail never pops in. */
+#georgetown-surface,.map-frame.zoom-detail #georgetown-surface{opacity:1;pointer-events:none}.map-frame #world-surface{pointer-events:none}
 .map-frame .pin-hit-box{fill:transparent;stroke:none;pointer-events:all}.map-frame .pin .label-bg{pointer-events:all}

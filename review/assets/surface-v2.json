@@ -1,20 +1,27 @@
 {
-  "description": "Static artwork clipped to exact approved land geometry; no measured elevation, land use or street layout.",
+  "description": "Shared world/district artwork clipped to exact approved land; no measured elevation, land use or street layout.",
   "inputs": [
     "scripts/bake_surface.cjs",
     "scripts/coastal_segments.py",
+    "review/diorama.js",
+    "review/map-core.js",
+    "review/map-renderer.js",
     "review/assets/coastal-recipe-v1.json",
     "data/source-receipts.json",
     "data/geography.geojson",
     "review/assets/landscape-v2.webp",
-    "review/assets/georgetown-material-v2.webp"
+    "review/assets/georgetown-material-v3.webp"
   ],
-  "input_sha256": "41bf16d5ccb0eac02195173d78f955da88e7d63d870e59993f856f336f27b376",
+  "input_sha256": "dac927f614f33de91108ba53216f6cee8b0944863573724d775b7f52e8ad1ede",
   "town": {
     "x": 390,
     "y": 266,
     "width": 150,
     "height": 118
+  },
+  "detail_pixels": {
+    "width": 1500,
+    "height": 1180
   },
   "coastal_way_ids": [
     7713541,
@@ -190,12 +197,12 @@
   ],
   "assets": {
     "review/assets/world-surface-v2.webp": {
-      "bytes": 226274,
-      "sha256": "fa1caa5c55c05f68327b96c4d7d479938b27200cca872d7f6e916f9c0222ca73"
+      "bytes": 219952,
+      "sha256": "77c05c3d61055c4e25bc6d48e73a490c62cf9e0b7c4fd448a6a11747f34bedba"
     },
     "review/assets/georgetown-surface-v2.webp": {
-      "bytes": 172250,
-      "sha256": "0d2f797831802d4a80b4bab14f2a697cd17e9b6c2c7cc79e0f7b9c6e9b31623b"
+      "bytes": 176144,
+      "sha256": "d897251c36a61c94f1569121d77c715ffef6053374459618eb394eaee0f13a65"
     }
   }
 }
