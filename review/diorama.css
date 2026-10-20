@@ -26,3 +26,10 @@
 /* The same urban composition stays visible through zoom; detail never pops in. */
 #georgetown-surface,.map-frame.zoom-detail #georgetown-surface{opacity:1;pointer-events:none}.map-frame #world-surface{pointer-events:none}
 .map-frame .pin-hit-box{fill:transparent;stroke:none;pointer-events:all}.map-frame .pin .label-bg{pointer-events:all}
+
+/* Hybrid world: quiet base, selective miniature districts. */
+.map-frame{background:#a5d7d5}.map-frame .geo-label{fill:#3a6660;stroke:#e5e8ce;stroke-width:4px;letter-spacing:.12em}.map-frame .geo-label.crossing-label,.map-frame .geo-label.water-label{fill:#245968;stroke:#b6dfd9;stroke-width:3px}.hotspot-art{pointer-events:none}.area-marker{cursor:pointer}.area-marker rect{fill:#fff9e8;stroke:#538b86;stroke-width:1}.area-marker text{fill:#275c5e;stroke:none;font:600 10px system-ui}.area-marker:focus-visible rect{stroke:#123e4c;stroke-width:3}.area-marker:hover rect{fill:#ffe5a9}.area-explorer{padding:13px 16px;background:#f5f0df;display:grid;grid-template-columns:auto minmax(0,1fr);gap:8px 12px;align-items:center}.area-explorer label{font-size:11px;font-weight:700;color:#315f5b}.area-explorer select{width:100%;min-height:44px;border:1px solid #a4b6a7;border-radius:9px;background:#fffaf0;color:#254f50;padding:8px;font:inherit;font-size:12px}.area-explorer p{grid-column:1/-1;font-size:11px;line-height:1.5;color:#42685f;margin:0;min-height:32px}.map-frame.zoom-quarter .area-marker{display:none}.map-frame.zoom-quarter .area-marker[data-area=georgetown]{display:block}@media(max-width:600px){.area-explorer{padding:10px}.area-explorer label{font-size:10px}.area-explorer p{font-size:10px}.area-marker text{font-size:10px}}
+
+/* The district selector remains the compact overview's readable area index. */
+.map-frame:not(.zoom-quarter) .area-marker[data-area=georgetown]{display:none}
+@media(max-width:600px){.map-frame:not(.zoom-detail) .area-marker{display:none}.map-frame:not(.zoom-detail) .area-marker[data-area=batu-kawan]{display:block}}

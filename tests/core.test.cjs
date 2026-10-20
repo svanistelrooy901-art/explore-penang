@@ -123,7 +123,7 @@ test('continuous terrain bake matches its source and stays outside geographic da
   assert.equal(input.digest('hex'),surface.input_sha256,'rebake when surface inputs change');
   for(const [file,meta]of Object.entries(surface.assets))assert.equal(crypto.createHash('sha256').update(fs.readFileSync(file)).digest('hex'),meta.sha256);
   assert.match(fs.readFileSync('scripts/bake_surface.cjs','utf8'),/clip-path="url\(#clip\)"/);
-  assert.equal((html.match(/data:image\/webp;base64,/g)||[]).length,4,'world, town, landmark atlas and ferry assets are embedded once each');
+  assert.equal((html.match(/data:image\/webp;base64,/g)||[]).length,3,'heritage atlas, urban atlas and ferry embedded once each');
   assert.notDeepEqual(D.crops.kho,D.crops.town,'Khoo Kongsi has its own architectural illustration');
 });
 test('camera flight has exact endpoints, finite bounded zoom and continuous centres',()=>{
@@ -174,4 +174,19 @@ test('coastal art builds without ignored source caches and rejects invalid recip
       assert.equal(result.status,1);assert.match(result.stderr,/ValueError: Coastal art/);
     }
   }finally{fs.rmSync(root,{recursive:true,force:true});}
+});
+
+test('ten regional art anchors are on approved land and separate from discovery destinations',()=>{
+  const hasCropClip=id=>R.renderWorld(data,'illustrated').includes('clip-path="url(#hotspot-crop-'+id+')"');
+  const H=require('../review/hotspots.js');assert.equal(H.areas.length,10);assert.equal(new Set(H.areas.map(a=>a.id)).size,10);
+  for(const area of H.areas){
+    assert(C.pointInGeometry(area.coordinates,features['penang-land'].geometry),area.id+' must be on approved land');
+    assert.equal(new URL(area.source).protocol,'https:');
+    if(area.art){const [x,y,w,h]=area.crop;assert(x>=0&&y>=0&&w>0&&h>0&&x+w<=1536&&y+h<=1024);assert(hasCropClip(area.id));}
+    if(area.place)assert.deepEqual(area.coordinates,places.find(p=>p.id===area.place).coordinates);
+  }
+  const html=R.renderWorld({...data,hotspotAtlas:'urban-atlas'},'illustrated');
+  assert(!html.includes('world-surface'));assert(!html.includes('georgetown-surface'));
+  assert(html.includes('id="flat-land"'));assert.equal((html.match(/class="hotspot-art"/g)||[]).length,6);
+  assert.equal((html.match(/class="area-marker"/g)||[]).length,6);
 });

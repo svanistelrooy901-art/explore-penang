@@ -4,8 +4,7 @@
   const data = JSON.parse(document.getElementById('review-data').textContent);
   // Reuse the initial SVG's embedded assets rather than duplicating base64 in JSON.
   data.atlas=document.getElementById('diorama-atlas')?.getAttribute('href')||'';
-  data.surface=document.getElementById('world-surface')?.getAttribute('href')||'';
-  data.town=document.getElementById('georgetown-surface')?.getAttribute('href')||'';
+  data.hotspotAtlas=document.getElementById('hotspot-atlas')?.getAttribute('href')||'';
   data.ferry=document.getElementById('ferry-texture')?.getAttribute('href')||'';
   let thumbnailId=0;
   function artThumbnail(id){
@@ -79,10 +78,11 @@
     if(paintScale!==camera.scale||paintUnit!==unit||paintCompact!==compact||paintSelected!==selected){
       paintScale=camera.scale;paintUnit=unit;paintCompact=compact;
     el('mapFrame').classList.toggle('zoom-detail',camera.scale>3);
-    svg.querySelectorAll('.landmark-art').forEach(node=>{
+    svg.querySelectorAll('.landmark-art,.hotspot-art').forEach(node=>{
       const limit=compact&&camera.scale>=4&&node.dataset.art===selected?1.65*unit:2.1;
       node.setAttribute('transform',`translate(${node.dataset.artX} ${node.dataset.artY}) scale(${1/Math.max(1,camera.scale/limit)})`);
     });
+    svg.querySelectorAll('.area-marker').forEach(node=>node.setAttribute('transform',`translate(${node.dataset.x} ${node.dataset.y}) scale(${unit/camera.scale})`));
     svg.querySelectorAll('.sea-decoration').forEach(node=>node.setAttribute('transform',`translate(${node.dataset.artX} ${node.dataset.artY}) scale(${1/Math.max(1,camera.scale/1.2)})`));
     for(const id of ['water','glitter'])svg.querySelector('#'+id)?.setAttribute('patternTransform',`scale(${1/Math.max(1,camera.scale/1.4)})`);
     svg.querySelectorAll('#map-labels text').forEach(node=>{
@@ -150,13 +150,18 @@
     if(focused)el('pins').querySelector(`[data-id="${focused}"]`)?.focus({preventScroll:true});
   }
   function redraw() {
-    const title = mode === 'reference' ? 'Penang north-up geographic reference map' : 'Penang illustrated depth study, based on the same OSM geometry';
+    const title = mode === 'reference' ? 'Penang north-up geographic reference map' : 'Penang flat map with landmark miniatures, based on the same OSM geometry';
     if(!worldCache.has(mode))worldCache.set(mode,R.renderWorld(data,mode));
     svg.innerHTML = `<title id="map-title">${title}</title><desc id="map-description">Two road bridges, separate ferry routes and eight representative destination coordinates. Terrain and buildings are decorative. Drag or pinch to explore, double-click to zoom. Arrow keys pan, plus and minus zoom, Home resets.</desc>` + worldCache.get(mode);
     pinSignature='';paintScale=0;paintSelected=undefined;
-    el('mapStatus').textContent = mode === 'reference' ? 'NORTH-UP · APPROVED GEOGRAPHY' : 'DIORAMA · APPROVED GEOGRAPHY';
+    el('mapStatus').textContent = mode === 'reference' ? 'NORTH-UP · APPROVED GEOGRAPHY' : 'MAP & LANDMARKS · APPROVED GEOGRAPHY';
     el('reference').setAttribute('aria-pressed', mode === 'reference');
     el('illustrated').setAttribute('aria-pressed', mode === 'illustrated');
+    svg.querySelectorAll('.area-marker').forEach(node=>{
+      const act=()=>{if(!dragged)focusArea(node.dataset.area);};
+      node.addEventListener('click',act);
+      node.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();focusArea(node.dataset.area);}});
+    });
     applyCamera();
   }
   function focusAt(coordinate, scale, forPlace=false) {
@@ -164,6 +169,15 @@
     const targetY=forPlace&&matchMedia('(max-width:850px)').matches?300:440;
     moveCamera({scale,x:550-x*scale,y:targetY-y*scale});
   }
+  function focusArea(id){
+    const area=PenangHotspots.areas.find(a=>a.id===id);if(!area)return;
+    el('detail').classList.remove('is-selected');
+    el('areaSelect').value=id;el('areaSummary').textContent=area.note;
+    focusAt(area.coordinates,area.scale);
+    el('navStatus').textContent='Exploring '+area.name;
+  }
+  for(const area of PenangHotspots.areas){const option=document.createElement('option');option.value=area.id;option.textContent=area.name;el('areaSelect').append(option);}
+  el('areaSelect').onchange=()=>focusArea(el('areaSelect').value);
   function focusQuarter() { focusAt([100.3375,5.416], 12); toast('George Town close-up — select a numbered place.'); }
   function hillsCenter(){const p=places.filter(p=>p.id==='hill'||p.id==='kek');return [(p[0].coordinates[0]+p[1].coordinates[0])/2,(p[0].coordinates[1]+p[1].coordinates[1])/2];}
   function choose(id, focus = true) {
@@ -210,7 +224,7 @@
   el('reset').onclick = () => {moveCamera({scale:1,x:0,y:0});};
   el('placeList').querySelectorAll('button').forEach(card => card.onclick = () => {choose(card.dataset.place); el('detail').focus({preventScroll:true});});
   svg.addEventListener('wheel', event => { event.preventDefault(); stopFlight();camera=C.zoomAt(camera,point(event),event.deltaY<0?1.12:1/1.12);requestCamera(); },{passive:false});
-  svg.addEventListener('dblclick',event=>{if(event.target.closest('.pin'))return;event.preventDefault();moveCamera(C.zoomAt(camera,point(event),2));});
+  svg.addEventListener('dblclick',event=>{if(event.target.closest('.pin,.area-marker'))return;event.preventDefault();moveCamera(C.zoomAt(camera,point(event),2));});
   svg.addEventListener('keydown',event=>{
     const steps={ArrowLeft:[60,0],ArrowRight:[-60,0],ArrowUp:[0,60],ArrowDown:[0,-60]};
     if(steps[event.key]){event.preventDefault();stopFlight();camera.x+=steps[event.key][0];camera.y+=steps[event.key][1];applyCamera();}
@@ -228,7 +242,7 @@
     else if (values.length > 1) gesture={camera:{...camera},mid:[(values[0][0]+values[1][0])/2,(values[0][1]+values[1][1])/2],distance:Math.hypot(values[0][0]-values[1][0],values[0][1]-values[1][1])};
     else gesture=null;
   }
-  svg.addEventListener('pointerdown', event => { stopFlight();dragged=false;pointers.set(event.pointerId,point(event));if(!event.target.closest('.pin')||pointers.size>1)svg.setPointerCapture(event.pointerId);beginGesture(); });
+  svg.addEventListener('pointerdown', event => { stopFlight();dragged=false;pointers.set(event.pointerId,point(event));if(!event.target.closest('.pin,.area-marker')||pointers.size>1)svg.setPointerCapture(event.pointerId);beginGesture(); });
   svg.addEventListener('pointermove', event => {
     if(!pointers.has(event.pointerId)||!gesture)return;
     pointers.set(event.pointerId,point(event));const values=[...pointers.values()];

@@ -132,3 +132,33 @@ Composition: opaque rectangular landscape material, 5:4 ratio, filling ALL edges
 Lighting: warm sun from upper left, consistent short directional shadows and small ambient-occlusion gaps between houses; photographic miniature model materials, attractive and detailed, not a cartoon. Crisp 2048x1632-style detail with no photographic tilt-shift blur. Moderate natural colour, avoid oversaturated orange roofs.
 Constraints: this is interpretive decorative urban ground, NOT a surveyed street map. NO ocean, water, coastline, seawall, island silhouette, raised plinth, floating cutout, large signature landmark, pagoda, giant temple, tall buildings, UI, words, signs, labels, logos, borders or watermark. No transparency. Do not duplicate a repeating tile or regular checkerboard; use irregular connected street blocks and varied roof geometry. Maintain the existing product's visual direction.
 ```
+
+
+## P02.4 hybrid map and urban atlas — 20 October 2026
+
+The owner revised the composition to a flat map with selected miniature hotspots. `hotspot-atlas-v1.webp` contains six built-in ImageGen symbols: Komtar, Gurney, Batu Kawan, Teluk Bahang, Queensbay and Butterworth. The existing atlas still supplies the eight discovery landmarks. Runtime no longer embeds the full-world or George Town surface tiles; their sources and reproducible bake remain archived for continuity.
+
+Source PNGs: `exec-f779e496-02c6-4608-afa1-e739542759e6.png` and targeted revision `exec-8cee3f24-bbab-4db1-8a6f-93ccf82688af.png`. Generated with the built-in ImageGen tool using the existing v3 landmark atlas as a style reference. The revision improves the Komtar office tower silhouette. Production output is technically resized from 1536×1024 to 1152×768 and encoded as WebP quality 76 / alpha 95. Original PNGs remain outside git. Measured SVG crop windows and explicit clip paths prevent neighbouring symbols leaking into letterboxed viewports.
+
+These are interpretive regional symbols: Gurney towers, Queensbay buildings and terminal details are not surveyed architecture. Entopia/ESCAPE and Batu Kawan retail are montages, not shared entrances/site plans. Presentation anchors and OSM/official source links are in `review/hotspots.js`; approved geographic files and eight visitor pins are unchanged. The approved original concept remains the miniature material/lighting reference; its fully illustrated composition is superseded by the owner's 20 October hybrid direction.
+
+### Initial urban atlas prompt
+
+```text
+Use case: stylized-concept.
+Asset type: ONE production transparent sprite atlas for the EXISTING Explore Penang hybrid tourism map, exactly 3 columns × 2 rows, landscape 1536 × 1024 layout. Six equal square cells, generous fully transparent gutters. Each object wholly inside its own cell, with at least 40px transparent padding on all sides. The existing supplied atlas is STYLE REFERENCE only: same detailed photographic miniature materials, 45-degree aerial oblique view, warm upper-left sunshine and fine local shadows. Do NOT reproduce its subjects.
+Create these six isolated interpretive Penang regional landmark symbols, one per cell:
+TOP LEFT: KOMTAR George Town — one tall slender pale-grey faceted cylindrical tower with horizontal bands, small dark windows, flat rooftop observation structure, on its low modern shopping podium, with just three small heritage shophouses at its foot. NOT twin towers, not the Petronas towers, not a needle spire.
+TOP MIDDLE: Gurney modern waterfront — a compact grouping of three elegant modern hotel/condominium towers of different heights, pale concrete and blue-grey glass, balconies, a low retail podium, a little green promenade with palms. No ocean, no coastline.
+TOP RIGHT: Batu Kawan retail — a recognizable low broad blue-and-yellow Scandinavian furniture-store warehouse beside a smaller open-air outlet shopping block, simple landscaped forecourt. No readable brand word or logo, no giant skyline.
+BOTTOM LEFT: Teluk Bahang family attractions — a light steel-and-glass butterfly conservatory pavilion with lush foliage and a small curling water slide/rope-park element behind it. A regional montage, not a surveyed site model.
+BOTTOM MIDDLE: Queensbay/Bayan Baru urban destination — a wide contemporary shopping-mall building with a curved silver canopy, two small modern apartment towers and a little landscaped plaza. A regional symbol, not an exact architectural claim.
+BOTTOM RIGHT: Butterworth Penang Sentral — a compact contemporary multi-level transport terminal, white/silver facade with bold orange-red accents, long horizontal roof, small bus bay and a small waterfront passenger-ferry pontoon, with no water.
+Constraints: one coherent six-cell atlas. Genuine alpha transparency outside each miniature. Tiny contact shadows only. NO land map, island outline, sea, terrain blanket, plinth, full square background, labels, lettering, logos, grid lines, UI, people portraits or watermark. Moderate natural colours, clean silhouettes readable at 60–100px. City symbols must clearly feel contemporary; trees are only small supporting accents. Accurate named subjects are interpretive rather than surveyed models. Do not add famous landmarks from other cities.
+```
+
+### Targeted correction prompt
+
+```text
+Edit this transparent 1536 x 1024 atlas while preserving the 3 column by 2 row layout and detailed miniature art style. Remove ALL diffuse background haze and broad glows around every asset: every pixel outside each miniature and its tight ground shadow must be fully transparent. CRITICAL each cell must have at least 35 px clear transparent padding on every side, no fragment from a neighbouring cell, so slightly shrink/recenter all six cutouts inside their 512 x 512 cells. Top left: replace the generic residential glass tower with recognisable KOMTAR Penang: tall pale beige cylindrical/faceted office tower with very closely spaced horizontal concrete floor bands and dark horizontal ribbon windows, NOT residential balconies, a simple wider circular top observation crown with subtle rainbow skywalk arc, broad low shopping podium, a couple of heritage shophouses. Keep the other five regional symbols in their existing positions and styles: Gurney modern waterfront hotel/condo towers; Batu Kawan blue/yellow warehouse with outlet shops; Teluk Bahang conservatory and adventure park regional montage; Queensbay modern mall and apartments regional montage; Butterworth modern transport terminal and ferry pontoon montage. No text, no logos, no labels, no grid. Transparent background.
+```
