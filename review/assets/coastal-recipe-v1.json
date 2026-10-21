@@ -1,0 +1,1232 @@
+{
+  "description": "Art-only coastline selection; vertex indices reference approved geography, with no new coordinates.",
+  "source": {
+    "cache_name": "state.osm",
+    "url": "https://api.openstreetmap.org/api/0.6/relation/4445131/full",
+    "retrieved_at": "2026-10-15T17:08:23.248097+00:00",
+    "sha256": "a3df14f4fd36cdade9382490ce16a87c95ef3ff2887e1a9ff1de82fc49f8e6ad"
+  },
+  "relation_id": 4445131,
+  "segments": [
+    {
+      "way_id": 7713541,
+      "polygon": 10,
+      "ring": 0,
+      "start": 0,
+      "step": 1,
+      "count": 230
+    },
+    {
+      "way_id": 7972059,
+      "polygon": 14,
+      "ring": 0,
+      "start": 2633,
+      "step": 1,
+      "count": 230
+    },
+    {
+      "way_id": 7972061,
+      "polygon": 7,
+      "ring": 0,
+      "start": 0,
+      "step": 1,
+      "count": 16
+    },
+    {
+      "way_id": 7972067,
+      "polygon": 9,
+      "ring": 0,
+      "start": 0,
+      "step": 1,
+      "count": 85
+    },
+    {
+      "way_id": 7972068,
+      "polygon": 8,
+      "ring": 0,
+      "start": 0,
+      "step": 1,
+      "count": 17
+    },
+    {
+      "way_id": 7972074,
+      "polygon": 5,
+      "ring": 0,
+      "start": 0,
+      "step": 1,
+      "count": 54
+    },
+    {
+      "way_id": 7972076,
+      "polygon": 14,
+      "ring": 0,
+      "start": 3825,
+      "step": 1,
+      "count": 3
+    },
+    {
+      "way_id": 7972077,
+      "polygon": 14,
+      "ring": 0,
+      "start": 329,
+      "step": 1,
+      "count": 188
+    },
+    {
+      "way_id": 7973566,
+      "polygon": 14,
+      "ring": 0,
+      "start": 4737,
+      "step": 1,
+      "count": 223
+    },
+    {
+      "way_id": 7973567,
+      "polygon": 14,
+      "ring": 0,
+      "start": 2962,
+      "step": 1,
+      "count": 227
+    },
+    {
+      "way_id": 7973704,
+      "polygon": 13,
+      "ring": 0,
+      "start": 0,
+      "step": 1,
+      "count": 176
+    },
+    {
+      "way_id": 7978967,
+      "polygon": 14,
+      "ring": 0,
+      "start": 687,
+      "step": 1,
+      "count": 233
+    },
+    {
+      "way_id": 10091560,
+      "polygon": 16,
+      "ring": 0,
+      "start": 1245,
+      "step": 1,
+      "count": 146
+    },
+    {
+      "way_id": 10091566,
+      "polygon": 16,
+      "ring": 0,
+      "start": 965,
+      "step": 1,
+      "count": 92
+    },
+    {
+      "way_id": 10091571,
+      "polygon": 16,
+      "ring": 0,
+      "start": 304,
+      "step": 1,
+      "count": 112
+    },
+    {
+      "way_id": 10091631,
+      "polygon": 16,
+      "ring": 0,
+      "start": 835,
+      "step": 1,
+      "count": 89
+    },
+    {
+      "way_id": 21034214,
+      "polygon": 14,
+      "ring": 0,
+      "start": 1064,
+      "step": 1,
+      "count": 21
+    },
+    {
+      "way_id": 21034221,
+      "polygon": 16,
+      "ring": 0,
+      "start": 1398,
+      "step": 1,
+      "count": 71
+    },
+    {
+      "way_id": 28362528,
+      "polygon": 16,
+      "ring": 0,
+      "start": 1659,
+      "step": 1,
+      "count": 4
+    },
+    {
+      "way_id": 28362530,
+      "polygon": 16,
+      "ring": 0,
+      "start": 1816,
+      "step": 1,
+      "count": 152
+    },
+    {
+      "way_id": 122355692,
+      "polygon": 14,
+      "ring": 0,
+      "start": 1084,
+      "step": 1,
+      "count": 206
+    },
+    {
+      "way_id": 122355694,
+      "polygon": 14,
+      "ring": 0,
+      "start": 2150,
+      "step": 1,
+      "count": 51
+    },
+    {
+      "way_id": 122355698,
+      "polygon": 14,
+      "ring": 0,
+      "start": 2023,
+      "step": 1,
+      "count": 25
+    },
+    {
+      "way_id": 122355701,
+      "polygon": 14,
+      "ring": 0,
+      "start": 1553,
+      "step": 1,
+      "count": 3
+    },
+    {
+      "way_id": 122355702,
+      "polygon": 14,
+      "ring": 0,
+      "start": 1351,
+      "step": 1,
+      "count": 36
+    },
+    {
+      "way_id": 122355704,
+      "polygon": 14,
+      "ring": 0,
+      "start": 1809,
+      "step": 1,
+      "count": 215
+    },
+    {
+      "way_id": 122355705,
+      "polygon": 14,
+      "ring": 0,
+      "start": 2052,
+      "step": 1,
+      "count": 99
+    },
+    {
+      "way_id": 122355710,
+      "polygon": 14,
+      "ring": 0,
+      "start": 627,
+      "step": 1,
+      "count": 16
+    },
+    {
+      "way_id": 122355713,
+      "polygon": 14,
+      "ring": 0,
+      "start": 516,
+      "step": 1,
+      "count": 112
+    },
+    {
+      "way_id": 122397989,
+      "polygon": 14,
+      "ring": 0,
+      "start": 658,
+      "step": 1,
+      "count": 30
+    },
+    {
+      "way_id": 122494747,
+      "polygon": 14,
+      "ring": 0,
+      "start": 3963,
+      "step": 1,
+      "count": 2
+    },
+    {
+      "way_id": 161721613,
+      "polygon": 6,
+      "ring": 0,
+      "start": 0,
+      "step": 1,
+      "count": 18
+    },
+    {
+      "way_id": 161778949,
+      "polygon": 14,
+      "ring": 0,
+      "start": 1386,
+      "step": 1,
+      "count": 127
+    },
+    {
+      "way_id": 256337595,
+      "polygon": 16,
+      "ring": 0,
+      "start": 1809,
+      "step": 1,
+      "count": 5
+    },
+    {
+      "way_id": 319712217,
+      "polygon": 16,
+      "ring": 0,
+      "start": 1813,
+      "step": 1,
+      "count": 4
+    },
+    {
+      "way_id": 319726493,
+      "polygon": 14,
+      "ring": 0,
+      "start": 919,
+      "step": 1,
+      "count": 146
+    },
+    {
+      "way_id": 319726508,
+      "polygon": 11,
+      "ring": 0,
+      "start": 0,
+      "step": 1,
+      "count": 239
+    },
+    {
+      "way_id": 319726514,
+      "polygon": 12,
+      "ring": 0,
+      "start": 0,
+      "step": 1,
+      "count": 202
+    },
+    {
+      "way_id": 406458708,
+      "polygon": 16,
+      "ring": 0,
+      "start": 585,
+      "step": 1,
+      "count": 99
+    },
+    {
+      "way_id": 488026181,
+      "polygon": 16,
+      "ring": 0,
+      "start": 529,
+      "step": 1,
+      "count": 17
+    },
+    {
+      "way_id": 497454874,
+      "polygon": 16,
+      "ring": 0,
+      "start": 1394,
+      "step": 1,
+      "count": 5
+    },
+    {
+      "way_id": 497454875,
+      "polygon": 16,
+      "ring": 0,
+      "start": 1113,
+      "step": 1,
+      "count": 104
+    },
+    {
+      "way_id": 544953105,
+      "polygon": 16,
+      "ring": 0,
+      "start": 303,
+      "step": 1,
+      "count": 2
+    },
+    {
+      "way_id": 638477923,
+      "polygon": 16,
+      "ring": 0,
+      "start": 1986,
+      "step": 1,
+      "count": 2
+    },
+    {
+      "way_id": 638480350,
+      "polygon": 16,
+      "ring": 0,
+      "start": 1967,
+      "step": 1,
+      "count": 20
+    },
+    {
+      "way_id": 643033601,
+      "polygon": 14,
+      "ring": 0,
+      "start": 5040,
+      "step": 1,
+      "count": 16
+    },
+    {
+      "way_id": 643540391,
+      "polygon": 15,
+      "ring": 0,
+      "start": 0,
+      "step": 1,
+      "count": 32
+    },
+    {
+      "way_id": 648533205,
+      "polygon": 16,
+      "ring": 0,
+      "start": 923,
+      "step": 1,
+      "count": 31
+    },
+    {
+      "way_id": 661691896,
+      "polygon": 14,
+      "ring": 0,
+      "start": 1289,
+      "step": 1,
+      "count": 63
+    },
+    {
+      "way_id": 661691904,
+      "polygon": 14,
+      "ring": 0,
+      "start": 1654,
+      "step": 1,
+      "count": 17
+    },
+    {
+      "way_id": 675672908,
+      "polygon": 16,
+      "ring": 0,
+      "start": 1393,
+      "step": 1,
+      "count": 2
+    },
+    {
+      "way_id": 675672909,
+      "polygon": 16,
+      "ring": 0,
+      "start": 953,
+      "step": 1,
+      "count": 13
+    },
+    {
+      "way_id": 675775782,
+      "polygon": 14,
+      "ring": 0,
+      "start": 3466,
+      "step": 1,
+      "count": 104
+    },
+    {
+      "way_id": 727731866,
+      "polygon": 2,
+      "ring": 0,
+      "start": 0,
+      "step": 1,
+      "count": 14
+    },
+    {
+      "way_id": 785759896,
+      "polygon": 1,
+      "ring": 0,
+      "start": 0,
+      "step": 1,
+      "count": 73
+    },
+    {
+      "way_id": 815921118,
+      "polygon": 14,
+      "ring": 0,
+      "start": 187,
+      "step": 1,
+      "count": 33
+    },
+    {
+      "way_id": 815921119,
+      "polygon": 14,
+      "ring": 0,
+      "start": 1,
+      "step": 1,
+      "count": 187
+    },
+    {
+      "way_id": 815921120,
+      "polygon": 14,
+      "ring": 0,
+      "start": 228,
+      "step": 1,
+      "count": 102
+    },
+    {
+      "way_id": 815921129,
+      "polygon": 14,
+      "ring": 0,
+      "start": 5084,
+      "step": 1,
+      "count": 101
+    },
+    {
+      "way_id": 815935265,
+      "polygon": 14,
+      "ring": 0,
+      "start": 3910,
+      "step": 1,
+      "count": 54
+    },
+    {
+      "way_id": 815935269,
+      "polygon": 14,
+      "ring": 0,
+      "start": 3827,
+      "step": 1,
+      "count": 83
+    },
+    {
+      "way_id": 815935286,
+      "polygon": 14,
+      "ring": 0,
+      "start": 3579,
+      "step": 1,
+      "count": 89
+    },
+    {
+      "way_id": 815935287,
+      "polygon": 14,
+      "ring": 0,
+      "start": 3758,
+      "step": 1,
+      "count": 68
+    },
+    {
+      "way_id": 815935932,
+      "polygon": 16,
+      "ring": 0,
+      "start": 1468,
+      "step": 1,
+      "count": 103
+    },
+    {
+      "way_id": 815935934,
+      "polygon": 16,
+      "ring": 0,
+      "start": 1570,
+      "step": 1,
+      "count": 90
+    },
+    {
+      "way_id": 816053526,
+      "polygon": 14,
+      "ring": 0,
+      "start": 3188,
+      "step": 1,
+      "count": 132
+    },
+    {
+      "way_id": 816053528,
+      "polygon": 14,
+      "ring": 0,
+      "start": 2569,
+      "step": 1,
+      "count": 65
+    },
+    {
+      "way_id": 816053535,
+      "polygon": 14,
+      "ring": 0,
+      "start": 2423,
+      "step": 1,
+      "count": 105
+    },
+    {
+      "way_id": 816053542,
+      "polygon": 14,
+      "ring": 0,
+      "start": 2200,
+      "step": 1,
+      "count": 132
+    },
+    {
+      "way_id": 816053548,
+      "polygon": 14,
+      "ring": 0,
+      "start": 3337,
+      "step": 1,
+      "count": 75
+    },
+    {
+      "way_id": 816070604,
+      "polygon": 14,
+      "ring": 0,
+      "start": 5198,
+      "step": 1,
+      "count": 55
+    },
+    {
+      "way_id": 816070621,
+      "polygon": 16,
+      "ring": 0,
+      "start": 469,
+      "step": 1,
+      "count": 55
+    },
+    {
+      "way_id": 816111389,
+      "polygon": 16,
+      "ring": 0,
+      "start": 1665,
+      "step": 1,
+      "count": 145
+    },
+    {
+      "way_id": 967269805,
+      "polygon": 16,
+      "ring": 0,
+      "start": 720,
+      "step": 1,
+      "count": 116
+    },
+    {
+      "way_id": 967269806,
+      "polygon": 16,
+      "ring": 0,
+      "start": 683,
+      "step": 1,
+      "count": 38
+    },
+    {
+      "way_id": 987101190,
+      "polygon": 14,
+      "ring": 0,
+      "start": 3570,
+      "step": 1,
+      "count": 10
+    },
+    {
+      "way_id": 987101191,
+      "polygon": 14,
+      "ring": 0,
+      "start": 3667,
+      "step": 1,
+      "count": 53
+    },
+    {
+      "way_id": 991994561,
+      "polygon": 14,
+      "ring": 0,
+      "start": 3965,
+      "step": 1,
+      "count": 201
+    },
+    {
+      "way_id": 991994562,
+      "polygon": 14,
+      "ring": 0,
+      "start": 4382,
+      "step": 1,
+      "count": 92
+    },
+    {
+      "way_id": 993372530,
+      "polygon": 14,
+      "ring": 0,
+      "start": 3411,
+      "step": 1,
+      "count": 2
+    },
+    {
+      "way_id": 1018547129,
+      "polygon": 14,
+      "ring": 0,
+      "start": 3319,
+      "step": 1,
+      "count": 19
+    },
+    {
+      "way_id": 1018547135,
+      "polygon": 14,
+      "ring": 0,
+      "start": 2881,
+      "step": 1,
+      "count": 71
+    },
+    {
+      "way_id": 1018547139,
+      "polygon": 14,
+      "ring": 0,
+      "start": 2951,
+      "step": 1,
+      "count": 12
+    },
+    {
+      "way_id": 1018547142,
+      "polygon": 14,
+      "ring": 0,
+      "start": 2862,
+      "step": 1,
+      "count": 20
+    },
+    {
+      "way_id": 1018557028,
+      "polygon": 14,
+      "ring": 0,
+      "start": 1585,
+      "step": 1,
+      "count": 30
+    },
+    {
+      "way_id": 1018557029,
+      "polygon": 14,
+      "ring": 0,
+      "start": 1617,
+      "step": 1,
+      "count": 38
+    },
+    {
+      "way_id": 1031975316,
+      "polygon": 14,
+      "ring": 0,
+      "start": 0,
+      "step": 1,
+      "count": 2
+    },
+    {
+      "way_id": 1095423463,
+      "polygon": 14,
+      "ring": 0,
+      "start": 3450,
+      "step": 1,
+      "count": 17
+    },
+    {
+      "way_id": 1110559436,
+      "polygon": 14,
+      "ring": 0,
+      "start": 5184,
+      "step": 1,
+      "count": 15
+    },
+    {
+      "way_id": 1156092013,
+      "polygon": 14,
+      "ring": 0,
+      "start": 1753,
+      "step": 1,
+      "count": 46
+    },
+    {
+      "way_id": 1156092014,
+      "polygon": 14,
+      "ring": 0,
+      "start": 1798,
+      "step": 1,
+      "count": 12
+    },
+    {
+      "way_id": 1197264358,
+      "polygon": 14,
+      "ring": 0,
+      "start": 4473,
+      "step": 1,
+      "count": 119
+    },
+    {
+      "way_id": 1204240379,
+      "polygon": 14,
+      "ring": 0,
+      "start": 5068,
+      "step": 1,
+      "count": 10
+    },
+    {
+      "way_id": 1204258030,
+      "polygon": 3,
+      "ring": 0,
+      "start": 0,
+      "step": 1,
+      "count": 41
+    },
+    {
+      "way_id": 1204267188,
+      "polygon": 14,
+      "ring": 0,
+      "start": 1555,
+      "step": 1,
+      "count": 14
+    },
+    {
+      "way_id": 1204267190,
+      "polygon": 14,
+      "ring": 0,
+      "start": 1570,
+      "step": 1,
+      "count": 6
+    },
+    {
+      "way_id": 1204267191,
+      "polygon": 14,
+      "ring": 0,
+      "start": 1580,
+      "step": 1,
+      "count": 3
+    },
+    {
+      "way_id": 1226968463,
+      "polygon": 0,
+      "ring": 0,
+      "start": 24,
+      "step": 1,
+      "count": 65
+    },
+    {
+      "way_id": 1227279403,
+      "polygon": 14,
+      "ring": 0,
+      "start": 3964,
+      "step": 1,
+      "count": 2
+    },
+    {
+      "way_id": 1227279404,
+      "polygon": 14,
+      "ring": 0,
+      "start": 5032,
+      "step": 1,
+      "count": 8
+    },
+    {
+      "way_id": 1227610849,
+      "polygon": 14,
+      "ring": 0,
+      "start": 3569,
+      "step": 1,
+      "count": 2
+    },
+    {
+      "way_id": 1229256299,
+      "polygon": 14,
+      "ring": 0,
+      "start": 1694,
+      "step": 1,
+      "count": 29
+    },
+    {
+      "way_id": 1229256300,
+      "polygon": 14,
+      "ring": 0,
+      "start": 1722,
+      "step": 1,
+      "count": 8
+    },
+    {
+      "way_id": 1247698950,
+      "polygon": 14,
+      "ring": 0,
+      "start": 5055,
+      "step": 1,
+      "count": 12
+    },
+    {
+      "way_id": 1247747774,
+      "polygon": 14,
+      "ring": 0,
+      "start": 5066,
+      "step": 1,
+      "count": 3
+    },
+    {
+      "way_id": 1256110161,
+      "polygon": 14,
+      "ring": 0,
+      "start": 5021,
+      "step": 1,
+      "count": 12
+    },
+    {
+      "way_id": 1256110162,
+      "polygon": 14,
+      "ring": 0,
+      "start": 4990,
+      "step": 1,
+      "count": 7
+    },
+    {
+      "way_id": 1256110164,
+      "polygon": 14,
+      "ring": 0,
+      "start": 4997,
+      "step": 1,
+      "count": 15
+    },
+    {
+      "way_id": 1256110165,
+      "polygon": 14,
+      "ring": 0,
+      "start": 4996,
+      "step": 1,
+      "count": 2
+    },
+    {
+      "way_id": 1256110167,
+      "polygon": 14,
+      "ring": 0,
+      "start": 5011,
+      "step": 1,
+      "count": 3
+    },
+    {
+      "way_id": 1256110168,
+      "polygon": 14,
+      "ring": 0,
+      "start": 5013,
+      "step": 1,
+      "count": 8
+    },
+    {
+      "way_id": 1256110170,
+      "polygon": 14,
+      "ring": 0,
+      "start": 5020,
+      "step": 1,
+      "count": 2
+    },
+    {
+      "way_id": 1270806630,
+      "polygon": 14,
+      "ring": 0,
+      "start": 4206,
+      "step": 1,
+      "count": 177
+    },
+    {
+      "way_id": 1270806631,
+      "polygon": 14,
+      "ring": 0,
+      "start": 4592,
+      "step": 1,
+      "count": 146
+    },
+    {
+      "way_id": 1271433076,
+      "polygon": 14,
+      "ring": 0,
+      "start": 3909,
+      "step": 1,
+      "count": 2
+    },
+    {
+      "way_id": 1271868623,
+      "polygon": 14,
+      "ring": 0,
+      "start": 3719,
+      "step": 1,
+      "count": 40
+    },
+    {
+      "way_id": 1297642890,
+      "polygon": 16,
+      "ring": 0,
+      "start": 545,
+      "step": 1,
+      "count": 41
+    },
+    {
+      "way_id": 1309885705,
+      "polygon": 14,
+      "ring": 0,
+      "start": 4165,
+      "step": 1,
+      "count": 42
+    },
+    {
+      "way_id": 1309885706,
+      "polygon": 14,
+      "ring": 0,
+      "start": 4959,
+      "step": 1,
+      "count": 32
+    },
+    {
+      "way_id": 1315076255,
+      "polygon": 14,
+      "ring": 0,
+      "start": 5039,
+      "step": 1,
+      "count": 2
+    },
+    {
+      "way_id": 1319884217,
+      "polygon": 14,
+      "ring": 0,
+      "start": 219,
+      "step": 1,
+      "count": 10
+    },
+    {
+      "way_id": 1320914837,
+      "polygon": 14,
+      "ring": 0,
+      "start": 2527,
+      "step": 1,
+      "count": 43
+    },
+    {
+      "way_id": 1320939265,
+      "polygon": 14,
+      "ring": 0,
+      "start": 2332,
+      "step": 1,
+      "count": 92
+    },
+    {
+      "way_id": 1320939268,
+      "polygon": 14,
+      "ring": 0,
+      "start": 2331,
+      "step": 1,
+      "count": 2
+    },
+    {
+      "way_id": 1321421723,
+      "polygon": 14,
+      "ring": 0,
+      "start": 1729,
+      "step": 1,
+      "count": 25
+    },
+    {
+      "way_id": 1321421725,
+      "polygon": 14,
+      "ring": 0,
+      "start": 2047,
+      "step": 1,
+      "count": 6
+    },
+    {
+      "way_id": 1321521309,
+      "polygon": 14,
+      "ring": 0,
+      "start": 642,
+      "step": 1,
+      "count": 17
+    },
+    {
+      "way_id": 1321544790,
+      "polygon": 14,
+      "ring": 0,
+      "start": 1512,
+      "step": 1,
+      "count": 42
+    },
+    {
+      "way_id": 1323542565,
+      "polygon": 16,
+      "ring": 0,
+      "start": 523,
+      "step": 1,
+      "count": 7
+    },
+    {
+      "way_id": 1323548109,
+      "polygon": 16,
+      "ring": 0,
+      "start": 1056,
+      "step": 1,
+      "count": 58
+    },
+    {
+      "way_id": 1324900838,
+      "polygon": 16,
+      "ring": 0,
+      "start": 1662,
+      "step": 1,
+      "count": 4
+    },
+    {
+      "way_id": 1326229905,
+      "polygon": 14,
+      "ring": 0,
+      "start": 1568,
+      "step": 1,
+      "count": 3
+    },
+    {
+      "way_id": 1326231080,
+      "polygon": 14,
+      "ring": 0,
+      "start": 1575,
+      "step": 1,
+      "count": 2
+    },
+    {
+      "way_id": 1326238250,
+      "polygon": 14,
+      "ring": 0,
+      "start": 1582,
+      "step": 1,
+      "count": 4
+    },
+    {
+      "way_id": 1326238251,
+      "polygon": 14,
+      "ring": 0,
+      "start": 1576,
+      "step": 1,
+      "count": 5
+    },
+    {
+      "way_id": 1326240884,
+      "polygon": 14,
+      "ring": 0,
+      "start": 1614,
+      "step": 1,
+      "count": 4
+    },
+    {
+      "way_id": 1326241800,
+      "polygon": 14,
+      "ring": 0,
+      "start": 1670,
+      "step": 1,
+      "count": 2
+    },
+    {
+      "way_id": 1327231732,
+      "polygon": 16,
+      "ring": 0,
+      "start": 415,
+      "step": 1,
+      "count": 55
+    },
+    {
+      "way_id": 1327436210,
+      "polygon": 16,
+      "ring": 0,
+      "start": 1390,
+      "step": 1,
+      "count": 4
+    },
+    {
+      "way_id": 1327436214,
+      "polygon": 16,
+      "ring": 0,
+      "start": 1216,
+      "step": 1,
+      "count": 2
+    },
+    {
+      "way_id": 1327436217,
+      "polygon": 16,
+      "ring": 0,
+      "start": 1217,
+      "step": 1,
+      "count": 29
+    },
+    {
+      "way_id": 1355126265,
+      "polygon": 14,
+      "ring": 0,
+      "start": 4591,
+      "step": 1,
+      "count": 2
+    },
+    {
+      "way_id": 1363860405,
+      "polygon": 14,
+      "ring": 0,
+      "start": 3437,
+      "step": 1,
+      "count": 9
+    },
+    {
+      "way_id": 1363860406,
+      "polygon": 14,
+      "ring": 0,
+      "start": 3412,
+      "step": 1,
+      "count": 26
+    },
+    {
+      "way_id": 1363860407,
+      "polygon": 14,
+      "ring": 0,
+      "start": 3445,
+      "step": 1,
+      "count": 6
+    },
+    {
+      "way_id": 1460967407,
+      "polygon": 14,
+      "ring": 0,
+      "start": 1674,
+      "step": 1,
+      "count": 21
+    },
+    {
+      "way_id": 1460967408,
+      "polygon": 14,
+      "ring": 0,
+      "start": 1671,
+      "step": 1,
+      "count": 4
+    },
+    {
+      "way_id": 1464130973,
+      "polygon": 14,
+      "ring": 0,
+      "start": 5078,
+      "step": 1,
+      "count": 7
+    },
+    {
+      "way_id": 1464130974,
+      "polygon": 14,
+      "ring": 0,
+      "start": 5077,
+      "step": 1,
+      "count": 2
+    },
+    {
+      "way_id": 1483112027,
+      "polygon": 0,
+      "ring": 0,
+      "start": 0,
+      "step": 1,
+      "count": 25
+    }
+  ],
+  "excluded_boundary_ways": [
+    319712220,
+    354918509,
+    354918514,
+    462247875,
+    497454872,
+    497454873,
+    638477916,
+    638477921,
+    816076202,
+    816076207,
+    816111400,
+    1323546497,
+    1327474452,
+    1327478456,
+    1327478457,
+    1330534568,
+    1330534570,
+    1414926873
+  ]
+}

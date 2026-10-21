@@ -1,0 +1,24 @@
+{
+  "areas": {
+    "georgetown": "Meet Penang’s city side: Komtar and the heritage quarter. Open a numbered landmark to discover its story.",
+    "gurney": "Look closer at the waterfront skyline, hotels and shopping around Gurney and Tanjung Tokong.",
+    "batu-kawan": "Explore a modern mainland neighbourhood around IKEA and outlet shopping in Batu Kawan.",
+    "ferringhi": "Follow the northern coast to Batu Ferringhi, with beaches and seaside stays.",
+    "penang-hill": "Head for hilltop views and a different side of the island. Select Penang Hill for official visitor information.",
+    "air-itam": "Discover temple architecture in Air Itam. Open Kek Lok Si to plan a visit.",
+    "teluk-bahang": "A corner of Penang for nature and adventure, with Entopia and ESCAPE nearby.",
+    "queensbay": "Discover the modern southeast: Queensbay, neighbourhoods and the business districts around Bayan Baru.",
+    "butterworth": "Look across the strait to Butterworth, Penang Sentral and the mainland waterfront.",
+    "bukit-mertajam": "Make room for the mainland: Bukit Mertajam’s town, local food and neighbourhood discoveries."
+  },
+  "places": {
+    "fort": {"kicker":"A story by the waterfront", "tip":"Pair your discovery with a look around the George Town waterfront."},
+    "kho": {"kicker":"Look a little closer", "tip":"Look for the clanhouse’s roof details, timberwork and stone carvings."},
+    "jetty": {"kicker":"A living waterfront", "tip":"This is a residential community. Keep to public areas and respect people’s homes."},
+    "hill": {"kicker":"A little higher, a little slower", "tip":"The pin marks the hill, not the lower funicular station. Check official directions and service announcements."},
+    "kek": {"kicker":"Temple architecture in the hills", "tip":"Use the venue’s visitor guidance to plan your arrival and find the right entrance."},
+    "beach": {"kicker":"Make time for the coast", "tip":"This pin represents Batu Ferringhi as a locality. Choose your beach access separately."},
+    "food": {"kicker":"Follow your appetite", "tip":"Chowrasta is one starting point for your own food exploration, rather than a fixed walking route."},
+    "mainland": {"kicker":"Another side of Penang", "tip":"The pin marks the town. Pick a specific stop before setting out."}
+  }
+}

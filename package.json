@@ -1,0 +1,17 @@
+{
+  "name": "explore-penang-geography-review",
+  "version": "0.2.2",
+  "private": true,
+  "scripts": {
+    "build:review": "node scripts/build_review.cjs",
+    "test": "node --test tests/core.test.cjs",
+    "test:browser": "node --test tests/browser.test.cjs",
+    "bake:surfaces": "node scripts/bake_surface.cjs",
+    "build:site": "node scripts/build_site.cjs",
+    "build": "npm run build:review && npm run build:site"
+  },
+  "devDependencies": {
+    "playwright": "1.61.1",
+    "sharp": "0.35.5"
+  }
+}

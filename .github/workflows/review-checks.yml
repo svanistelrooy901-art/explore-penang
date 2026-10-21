@@ -1,0 +1,25 @@
+name: Geography review checks
+on:
+  pull_request:
+  push:
+    branches: [review/p02-geography]
+permissions:
+  contents: read
+jobs:
+  review:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci --ignore-scripts
+      - run: npm run bake:surfaces
+      - run: git diff --exit-code -- review/assets/world-surface-v2.webp review/assets/georgetown-surface-v2.webp review/assets/surface-v2.json
+      - run: npm run build
+      - run: git diff --exit-code -- index.html review.html docs/geography-reference.svg docs/geography-illustrated.svg
+      - run: npm test
+      - run: npx playwright install --with-deps chromium
+      - run: npm run test:browser
