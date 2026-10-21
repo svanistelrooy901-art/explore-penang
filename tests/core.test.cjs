@@ -190,3 +190,21 @@ test('ten regional art anchors are on approved land and separate from discovery 
   assert(html.includes('id="flat-land"'));assert.equal((html.match(/class="hotspot-art"/g)||[]).length,6);
   assert.equal((html.match(/class="area-marker"/g)||[]).length,6);
 });
+
+test('visitor site is self-contained and uses the protected map without review scaffolding',()=>{
+ const html=fs.readFileSync('index.html','utf8');
+ assert(html.includes('data-experience="public"'));assert(html.includes('id="placeSearch"'));
+ assert(html.includes('id="flat-land"'));assert.equal((html.match(/class="place-card"/g)||[]).length,8);
+ assert(!html.includes('class="review-banner"'));assert(!html.includes('id="review-notes"'));assert(!html.includes('/*__'));
+ assert(!/\b(?:src|href)="https?:\/\/[^"]+\.(?:js|css)/.test(html));
+ assert.equal((html.match(/data:image\/webp;base64,/g)||[]).length,3);
+ assert(Buffer.byteLength(html)<2000000);assert(html.includes('© OpenStreetMap contributors'));
+ const json=html.match(/<script id="review-data" type="application\/json">([\s\S]*?)<\/script>/)[1];
+ const built=JSON.parse(json);assert.deepEqual(built.geography,geography);assert.deepEqual(built.places,places);
+ assert.equal(built.visitorMode,true);assert.equal(Object.keys(built.content.areas).length,10);
+});
+test('visitor progress restores the existing public-site key without mixing review progress',()=>{
+ const storage={getItem:key=>JSON.stringify(key==='explorePenangDiscovered'?['fort','kho','bad']:['hill'])};
+ assert.deepEqual([...C.readProgress(storage,places.map(p=>p.id),'explorePenangDiscovered')],['fort','kho']);
+ assert.deepEqual([...C.readProgress(storage,places.map(p=>p.id))],['hill']);
+});

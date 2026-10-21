@@ -33,3 +33,6 @@
 /* The district selector remains the compact overview's readable area index. */
 .map-frame:not(.zoom-quarter) .area-marker[data-area=georgetown]{display:none}
 @media(max-width:600px){.map-frame:not(.zoom-detail) .area-marker{display:none}.map-frame:not(.zoom-detail) .area-marker[data-area=batu-kawan]{display:block}}
+
+
+.hotspot-art{pointer-events:none}.hotspot-target{fill:transparent;stroke:none;cursor:pointer;pointer-events:all}.hotspot-target:focus-visible{outline:none;stroke:#ac7b34;stroke-width:1.5}

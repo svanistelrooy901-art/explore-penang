@@ -270,3 +270,46 @@ test('mobile discovery retains visible map context and a readable selected landm
   assert(await page.evaluate(()=>document.documentElement.scrollWidth<=320));
   assert.deepEqual(errors,[]);await context.close();
 });
+
+test('visitor site: modern area graphics, discovery and real visit links work',async()=>{
+ const {page,context,errors}=await setup();await page.goto(url.replace('review.html','index.html'));
+ assert.equal(await page.locator('.review-banner,#review-notes').count(),0);
+ assert.equal(await page.locator('.bridge').count(),2);assert.equal(await page.locator('#placeList .place-card').count(),8);
+ const skyline=page.locator('.hotspot-target[data-area="gurney"]');assert((await skyline.boundingBox()).width<130);await skyline.click();assert.equal(await page.locator('#areaSelect').inputValue(),'gurney');assert.equal(await page.locator('#progressText').innerText(),'0 / 8');
+ await page.locator('[data-place="kho"]').click();await page.waitForFunction(()=>document.querySelector('#map-section').getBoundingClientRect().top>=-3&&document.querySelector('#map-section').getBoundingClientRect().top<20);
+ assert.match(await page.locator('#detail').innerText(),/timberwork and stone carvings/);
+ assert.equal(await page.getByRole('link',{name:'Official visitor info'}).getAttribute('href'),'https://www.khookongsi.com.my/');
+ assert.match(await page.getByRole('link',{name:'Open in Maps'}).getAttribute('href'),/query=5\.4142654/);
+ assert.equal(await page.locator('#progressText').innerText(),'1 / 8');assert.deepEqual(errors,[]);await context.close();
+});
+test('visitor search combines categories, handles no results and resets for a quest',async()=>{
+ const {page,context,errors}=await setup();await page.goto(url.replace('review.html','index.html'));
+ const search=page.getByRole('searchbox',{name:'Find a place'});await search.fill('hill');assert.equal(await page.locator('.place-card:visible').count(),2);
+ await page.getByRole('button',{name:'Nature',exact:true}).click();assert.equal(await page.locator('.place-card:visible').count(),1);
+ await search.fill('<img src=x onerror=alert(1)>');assert.equal(await page.locator('.place-card:visible').count(),0);assert(await page.locator('#emptyState').isVisible());
+ await page.getByRole('button',{name:'Show all places'}).click();assert.equal(await page.locator('.place-card:visible').count(),8);assert.equal(await search.inputValue(),'');
+ await search.fill('not-a-place');await page.locator('#questButton').click();assert.equal(await search.inputValue(),'');assert.equal(await page.locator('.place-card:visible').count(),3);
+ assert.deepEqual(errors,[]);await context.close();
+});
+test('visitor progress preserves old public discoveries and stays separate from review',async()=>{
+ const {page,context,errors}=await setup();await page.evaluate(()=>{localStorage.setItem('explorePenangDiscovered',JSON.stringify(['fort','jetty']));localStorage.setItem('explorePenangReviewDiscovered',JSON.stringify(['hill']));});
+ await page.goto(url.replace('review.html','index.html'));assert.equal(await page.locator('#progressText').innerText(),'2 / 8');await page.locator('[data-place="kho"]').click();assert.match(await page.locator('#questProgress').innerText(),/unlocked/);
+ await page.reload();assert.equal(await page.locator('#progressText').innerText(),'3 / 8');await page.goto(url);assert.equal(await page.locator('#progressText').innerText(),'1 / 8');
+ assert.deepEqual(errors,[]);await context.close();
+});
+test('visitor mobile: profile, touch gestures, keyboard and 320px layout remain usable',async()=>{
+ const {page,context,errors}=await setup({viewport:{width:390,height:844},hasTouch:true,isMobile:true});await page.goto(url.replace('review.html','index.html'));
+ assert(await page.evaluate(()=>document.documentElement.scrollWidth<=390));await page.locator('#areaSelect').selectOption('batu-kawan');assert.match(await page.locator('#areaSummary').innerText(),/IKEA/);
+ await page.locator('[data-place="kho"]').click();await page.waitForFunction(()=>document.querySelector('#map-section').getBoundingClientRect().top<3);
+ const pin=await page.locator('.pin[data-id="kho"] .pin-dot').boundingBox(),sheet=await page.locator('#detail').boundingBox();assert(pin.y>=0&&pin.y+pin.height<sheet.y);
+ await page.keyboard.press('Escape');assert.equal(await page.evaluate(()=>document.activeElement.id),'map');assert(!(await page.locator('#detail').getAttribute('class')).includes('is-selected'));
+ await page.setViewportSize({width:320,height:740});assert(await page.evaluate(()=>document.documentElement.scrollWidth<=320));await page.locator('#reset').click();assert.match(await page.locator('#camera').getAttribute('transform'),/scale\(1\)/);
+ assert.deepEqual(errors,[]);await context.close();
+});
+test('visitor standalone build makes no external requests and shares a place deep link',async()=>{
+ const context=await browser.newContext({viewport:{width:1440,height:1000},reducedMotion:'reduce'}),page=await context.newPage(),requests=[],errors=[];page.on('pageerror',e=>errors.push(e.message));
+ await page.addInitScript(()=>{window.shared=[];Object.defineProperty(navigator,'share',{value:async value=>window.shared.push(value)});});
+ page.on('request',r=>{if(/^https?:/.test(r.url()))requests.push(r.url());});
+ await page.goto('file://'+path.resolve('index.html'));await page.locator('[data-place="hill"]').click();await page.locator('#sharePlace').click();
+ const shared=await page.evaluate(()=>window.shared);assert.equal(shared.length,1);assert(shared[0].url.endsWith('#hill'));assert(!shared[0].title.includes('Review'));assert.deepEqual(requests,[]);assert.deepEqual(errors,[]);await context.close();
+});

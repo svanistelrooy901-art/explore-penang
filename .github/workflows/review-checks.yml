@@ -18,8 +18,8 @@ jobs:
       - run: npm ci --ignore-scripts
       - run: npm run bake:surfaces
       - run: git diff --exit-code -- review/assets/world-surface-v2.webp review/assets/georgetown-surface-v2.webp review/assets/surface-v2.json
-      - run: npm run build:review
-      - run: git diff --exit-code -- review.html docs/geography-reference.svg docs/geography-illustrated.svg
+      - run: npm run build
+      - run: git diff --exit-code -- index.html review.html docs/geography-reference.svg docs/geography-illustrated.svg
       - run: npm test
       - run: npx playwright install --with-deps chromium
       - run: npm run test:browser

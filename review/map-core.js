@@ -52,9 +52,9 @@
     const bx=(550-b.x)/b.scale,by=(440-b.y)/b.scale;
     return {scale,x:550-(ax+(bx-ax)*t)*scale,y:440-(ay+(by-ay)*t)*scale};
   }
-  function readProgress(storage, validIds) {
+  function readProgress(storage, validIds, key = 'explorePenangReviewDiscovered') {
     try {
-      const values = JSON.parse(storage.getItem('explorePenangReviewDiscovered') || '[]');
+      const values = JSON.parse(storage.getItem(key) || '[]');
       return new Set(Array.isArray(values) ? values.filter(id => validIds.includes(id)) : []);
     } catch { return new Set(); }
   }

@@ -1,70 +1,47 @@
 # Explore Penang
 
-## P02.2 geography review — 15 October 2026
+A static, interactive Penang discovery site: **Explore → Discover → Visit**.
 
-Mamu approved the geographic draft on **16 October 2026**, against commit `18aa684`. The approved source files are fingerprinted in [geography-approval.json](docs/geography-approval.json) and checked by tests. Illustration work continues on `review/p02-geography`. Open **[review.html](review.html)** directly in a browser; it works offline and includes its source data.
+The visitor-facing `index.html` now uses the approved OSM-based geography and a flat map with selective miniature landmarks. It includes both Penang bridges, ferry crossings, ten area focus choices, eight attraction stories with official links, place search, category filters, a Discovery Journal, Heritage Hunter quest and sharing.
 
-- North-up map assembled from real OSM coastline and state-boundary member ways.
-- Both road bridges and separate George Town–Butterworth ferry routes.
-- An illustrated depth study using the identical geometry.
-- Eight source-linked representative points, official visitor links, filters, a George Town close-up, discovery progress and Heritage Hunter quest.
-- Pointer drag, wheel/button zoom, touch pinch, keyboard selection, deep links and safe recovery from unavailable/corrupt storage.
-- No runtime mapping API, third-party script, analytics or tile request.
+Development continues on `review/p02-geography` in draft PR #1. Changes to `index.html` on this review branch are a proposed replacement; the live `main` branch and GitHub Pages remain unchanged until the owner explicitly approves publication.
 
-The live `index.html` remains the earlier schematic prototype. P02.3 now defaults to a textured diorama: generated architectural/forest sprites, layered land edges, shallow-water light, bridge decks/piers/towers derived from the approved footprints, and optional water/ferry motion. Island/bridge focus presets, keyboard navigation, presentation switching that preserves camera position, mobile clusters and a compact attraction sheet improve exploration. The richer illustrated-world treatment is still in progress; architecture and terrain are artistic interpretations. Evidence and publication status: [P02-GEOGRAPHY-REVIEW.md](docs/P02-GEOGRAPHY-REVIEW.md). Asset origin and prompt: [artwork notes](review/assets/README.md).
+## Open and develop
 
-The offline review including its embedded 455 KB atlas remains below 2 MB. It makes no third-party requests. Pin DOM is reused while panning, pointer rendering is limited to animation frames, and each presentation is cached. Reduced-motion preference is respected and motion can be disabled explicitly.
-
-### Develop and verify
+Open **[index.html](index.html)** directly in a modern browser. It is self-contained and works offline; official visitor links need an internet connection. **[review.html](review.html)** retains the geography/art review interface and source evidence.
 
 ```sh
 npm ci --ignore-scripts
-npm run build:review
+npm run build
 npm test
 npx playwright install chromium
 npm run test:browser
+npm audit
 ```
 
-The build is deterministic from committed data. `review.html` and both `docs/geography-*.svg` files are generated. Edit `review/`, then rebuild. To deliberately refresh data, run `python3 scripts/fetch_sources.py` then `python3 scripts/build_geography.py`; read [data notes](data/README.md) first. Changed geography requires a new review.
+- `site/template.html`, `site/style.css` and `site/content.json`: visitor-facing layout and editorial copy.
+- `review/`: shared map renderer, artwork, camera/gesture handling and review layout.
+- `scripts/page-builder.cjs`: shared page assembly, embedding three WebP assets once per document.
+- `npm run build:site`: regenerates `index.html` only.
+- `npm run build:review`: regenerates `review.html` and both `docs/geography-*.svg` maps.
+- `npm run bake:surfaces`: reproduces the archived landscape tiles and their input manifest. These tiles are no longer loaded by the hybrid map.
 
-## Existing live P01 / early P02 prototype
+Search filters the eight current destination records. The ten areas are presentation focus points, not ten additional attraction profiles. Choosing an area does not increment discovery progress. Opening an attraction story does; this is not a visited-place or GPS tracker.
 
-Open `index.html` in a modern browser. No dependencies, API keys or build process required.
+Visitor progress retains the original `explorePenangDiscovered` storage key. The technical review uses its own key. Corrupt or unavailable storage falls back safely to in-memory progress.
 
-## Implemented
-- Original stylized SVG island/mainland scene, decorative layers and subtle CSS animation
-- Clickable landmarks and category filtering
-- Pan/zoom by pointer or buttons; mouse wheel zoom
-- Tourism cards with directions and **search-based** official information/ticket discovery
-- Heritage Hunter discovery quest and locally saved progress
-- Shareable location deep links and Web Share/copy functionality
-- Mobile-responsive layout
+## Geographic integrity
 
-## Important limitations
-- The artwork is a **schematic**, not geographically accurate. Coordinates are visual placements, not GIS data.
-- The eight entries are sample content, not a verified visitor directory.
-- The official information button opens a search query; it does **not** represent a verified official ticketing URL.
-- No analytics, affiliate links, sponsorships, authentication, or backend are active.
+The owner approved the geographic foundation on 16 October 2026, against commit `18aa684`. Exact approved files and hashes are protected by [geography-approval.json](docs/geography-approval.json) and automated tests. Do not refresh or alter coastlines, bridge footprints, ferry routes, destination coordinates or source receipts without explicit owner approval.
 
-## Next production tasks
-1. Replace schematic map with geographic SVG/MapLibre source aligned to real Penang coordinates.
-2. Build a consistent illustration asset pack (George Town, Penang Hill, mainland).
-3. Create verified attraction records with canonical official URLs, prices/hours verification timestamps and photo rights.
-4. Add privacy-respecting event analytics for engaged explorers and outbound clicks.
-5. Add OG image generation, server-rendered destination pages and SEO metadata for social/search traffic.
-6. Add tests for mobile interaction, deep links, map alignment and accessibility.
-7. Introduce sponsored placement schema and labeling, without activating payments yet.
+The ten decorative area anchors and source links live separately in `review/hotspots.js`. Architectural symbols, vegetation, bridge details and regional montages are interpretive, not surveyed models. The eastern edge of the displayed mainland is the regional administrative boundary, not a coastline.
 
-## P02 illustrated-world visual pass (14 October 2026)
+## Validation and limits
 
-The first P02 visual increment is committed on `main`: original inline-SVG decorative landmarks (George Town rooftops, shophouses, hills, temple, coastal palm, mainland town), ocean details, compass, map annotation, active-pin highlighting, and reduced-motion CSS.
+The browser suite covers review and visitor flows, desktop and 390/320px layouts, touch/pan/zoom, keyboard access, reduced motion, official visit links, search/filter recovery, persistent progress, deep links, sharing and standalone/offline behavior. Synthetic performance checks use 4× CPU throttling; physical iOS/Android and screen-reader QA remain outstanding.
 
-**Scope / honesty:** The map coastline and pin positions are still **schematic**, not GIS-accurate. These illustrated assets are decorative and do not establish real-world geographic precision. Official destination links remain search fallbacks, not verified ticket providers. GitHub Pages is static; no analytics or backend is configured. Browser/device QA is outstanding.
+No backend, account, runtime map API, third-party script, analytics, location tracking, ticket sales or affiliate integration is active. Hours, fees and visitor entrances should be checked with the venue. The approved concept informs miniature materials and lighting; the owner's later direction calls for a flat base with detail at selected hotspots.
 
-### P02 next tasks
+**P02 artwork remains in progress. Tests passing does not constitute visual acceptance. Keep PR #1 draft; no merge, deployment, DNS or Pages configuration change without owner approval.**
 
-1. Replace the schematic coastline and hand-positioned pins with a verified geospatial foundation (license and attribution reviewed).
-2. Align each destination to real coordinates, then build a consistent scalable illustrated asset set.
-3. Test touch pan/zoom, keyboard access, reduced motion and small-screen legibility on real devices.
-4. Replace Google-search fallbacks with individually verified official visitor and ticket URLs; include opening-hour caveats.
-5. Add performance budget, SEO metadata, analytics and share-card previews before traffic campaigns.
+Asset prompts and provenance: [artwork README](review/assets/README.md). Geographic source/licensing notes: [data README](data/README.md).
